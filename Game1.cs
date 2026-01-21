@@ -29,6 +29,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        // Should load resources before starting the scene
+        ResourceManager.Instance.LoadFont("DefaultFont", Content.Load<SpriteFont>("font"));
+
+        // Start the initial scene
         SceneManager.Instance.LoadScene("GameScene");
     }   
 
