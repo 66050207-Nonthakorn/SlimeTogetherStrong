@@ -21,6 +21,11 @@ class Animator : Component
         }
     }
 
+    public Animation GetCurrentAnimation()
+    {
+        return _currentAnimation;
+    }
+
     public override void Update(GameTime gameTime)
     {
         _currentAnimation?.Update(gameTime);

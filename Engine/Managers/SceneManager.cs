@@ -36,4 +36,9 @@ public class SceneManager
     {
         _currentScene?.Draw(spriteBatch);
     }
+
+    public Scene GetCurrentScene()
+    {
+        return _currentScene;
+    }
 }

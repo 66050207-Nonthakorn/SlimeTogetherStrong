@@ -21,7 +21,7 @@ public abstract class Scene
         GameObjects.Clear();
     }
 
-    public void Update(GameTime gameTime)
+    public virtual void Update(GameTime gameTime)
     {
         foreach (var gameObject in GameObjects)
         {
