@@ -13,8 +13,7 @@ public class Player : GameObject
 {
     // Movement
     public float CurrentAngle { get; private set; } = 0f;
-    private float _targetAngle = 0f;
-    public float MoveSpeed { get; set; } = 5f;
+    public float RotationSpeed { get; set; } = 3f;  // radians per second
 
     // Shooting
     public float ShootCooldown { get; set; } = 0.3f;
@@ -95,7 +94,7 @@ public class Player : GameObject
             _shootTimer -= deltaTime;
         }
 
-        HandleMouseInput(deltaTime);
+        HandleMovementInput(deltaTime);
         HandleAttackInput();
         HandleAttackState(deltaTime);
         UpdateAnimation();
@@ -103,44 +102,33 @@ public class Player : GameObject
         base.Update(gameTime);
     }
 
-    private void HandleMouseInput(float deltaTime)
+    private void HandleMovementInput(float deltaTime)
     {
-        MouseState mouseState = Mouse.GetState();
-        Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
+        // A or Left Arrow = rotate counter-clockwise (ทวนเข็ม)
+        // D or Right Arrow = rotate clockwise (ตามเข็ม)
 
-        Vector2 direction = mousePos - GameConstants.CENTER;
-        _targetAngle = (float)Math.Atan2(direction.Y, direction.X);
+        int direction = 0;
 
-        CurrentAngle = LerpAngle(CurrentAngle, _targetAngle, MoveSpeed * deltaTime);
-
-        UpdatePositionOnRing();
-    }
-
-    private float LerpAngle(float current, float target, float amount)
-    {
-        float difference = WrapAngle(target - current);
-
-        if (Math.Abs(difference) < 0.01f)
+        if (InputManager.Instance.IsKeyDown(Keys.A) || InputManager.Instance.IsKeyDown(Keys.Left))
         {
-            return target;
+            direction = -1;  // ทวนเข็มนาฬิกา
+        }
+        else if (InputManager.Instance.IsKeyDown(Keys.D) || InputManager.Instance.IsKeyDown(Keys.Right))
+        {
+            direction = 1;   // ตามเข็มนาฬิกา
         }
 
-        return current + difference * Math.Clamp(amount, 0f, 1f);
-    }
-
-    private float WrapAngle(float angle)
-    {
-        while (angle > MathHelper.Pi)
-            angle -= MathHelper.TwoPi;
-        while (angle < -MathHelper.Pi)
-            angle += MathHelper.TwoPi;
-        return angle;
+        if (direction != 0)
+        {
+            CurrentAngle += direction * RotationSpeed * deltaTime;
+            UpdatePositionOnRing();
+        }
     }
 
     private void HandleAttackInput()
     {
-        bool wantToShoot = InputManager.Instance.IsKeyPressed(Keys.Space) ||
-                          Mouse.GetState().LeftButton == ButtonState.Pressed;
+        // Mouse left click = shoot (hold for auto-fire)
+        bool wantToShoot = Mouse.GetState().LeftButton == ButtonState.Pressed;
 
         if (wantToShoot && _shootTimer <= 0)
         {
