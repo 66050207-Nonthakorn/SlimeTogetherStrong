@@ -196,4 +196,12 @@ public class Player : GameObject
         if (degrees < 0) degrees += 360;
         return (int)(degrees / GameConstants.LANE_ANGLE_STEP) % GameConstants.LANE_COUNT;
     }
+
+    public bool IsAttacking => _isAttacking;
+
+    // Player กำลัง shoot cooldown อยู่หรือไม่
+    public bool IsOnShootCooldown => _shootTimer > 0;
+
+    /// เวลา shoot cooldown ที่เหลือ (วินาที)
+    public float GetRemainingShootCooldown() => Math.Max(0f, _shootTimer);
 }

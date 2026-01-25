@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
+using SlimeTogetherStrong.Engine.Components.Physics;
 using SlimeTogetherStrong.Engine.Managers;
 
 namespace SlimeTogetherStrong.Game;
@@ -22,8 +23,15 @@ public class Projectile : GameObject
         Direction = Vector2.Normalize(direction);
         Scale = new Vector2(0.05f, 0.05f);
 
-
         SetupRenderer();
+        SetupCollider();
+    }
+
+    private void SetupCollider()
+    {
+        var collider = AddComponent<CircleCollider>();
+        collider.Radius = 10f;  // รัศมี collision ของกระสุน
+        collider.IsTrigger = true;
     }
 
     private void SetupRenderer()

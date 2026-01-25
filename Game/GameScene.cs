@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
+using SlimeTogetherStrong.Engine.Components.Physics;
 using SlimeTogetherStrong.Engine.Managers;
 
 namespace SlimeTogetherStrong.Game;
@@ -13,13 +14,15 @@ public class GameScene : Scene
     private Texture2D _pixelTexture;
     private Player _player;
     private List<GameObject> _objectsToRemove = new List<GameObject>();
-    private List<GameObject> _objectsToAdd = new List<GameObject>();  // เพิ่มบรรทัดนี้                                                                                                                 
+    private List<GameObject> _objectsToAdd = new List<GameObject>();
+    private List<GameObject> _targets = new List<GameObject>();  // สำหรับ test collision
 
 
     public GameScene()
     {
         CreateCastle();
         CreatePlayer();
+        CreateTestTargets();  // สร้าง dummy targets สำหรับทดสอบ ถ้ามี enermy แล้วจะเอามาแทนตรงนี้
     }
 
     private void CreateCastle()
@@ -47,6 +50,58 @@ public class GameScene : Scene
         AddGameObject(_player);
     }
 
+    private void CreateTestTargets()
+    {
+        // สร้าง 3 targets บน GREEN_RADIUS สำหรับทดสอบ
+        float[] angles = { 0f, MathHelper.PiOver2, MathHelper.Pi };  // 0°, 90°, 180°
+
+        foreach (float angle in angles)
+        {
+            var target = new GameObject();
+            target.Tag = "Target";
+
+            // Position บน GREEN_RADIUS
+            float x = GameConstants.CENTER.X + MathF.Cos(angle) * GameConstants.GREEN_RADIUS;
+            float y = GameConstants.CENTER.Y + MathF.Sin(angle) * GameConstants.GREEN_RADIUS;
+            target.Position = new Vector2(x, y);
+            target.Scale = new Vector2(0.08f, 0.08f);
+
+            // ใช้ castle texture เป็น placeholder
+            var renderer = target.AddComponent<SpriteRenderer>();
+            renderer.Texture = ResourceManager.Instance.GetTexture("castle");
+            renderer.Tint = Color.Red;  // สีแดงให้เห็นชัด
+            if (renderer.Texture != null)
+            {
+                renderer.Origin = new Vector2(renderer.Texture.Width / 2f, renderer.Texture.Height / 2f);
+            }
+
+            // เพิ่ม CircleCollider
+            var collider = target.AddComponent<CircleCollider>();
+            collider.Radius = 25f;  // รัศมี collision ของ target
+
+            // เพิ่ม HealthComponent
+            var health = target.AddComponent<HealthComponent>();
+            health.MaxHP = 30;  // HP 30 = ยิง 3 ครั้งตาย (Projectile damage = 10)
+            health.Initialize();
+
+            // Event เมื่อโดนยิง
+            health.OnDamage += (dmg) =>
+            {
+                System.Diagnostics.Debug.WriteLine($"HP: {health.CurrentHP}/{health.MaxHP}");
+            };
+
+            // Event เมื่อตาย
+            health.OnDeath += () =>
+            {
+                System.Diagnostics.Debug.WriteLine(" DESTROYED!");
+                target.Active = false;
+            };
+
+            AddGameObject(target);
+            _targets.Add(target);
+        }
+    }
+
     // Player spawn bullet
     public void SpawnProjectile(Vector2 position, Vector2 direction)
     {
@@ -61,12 +116,17 @@ public class GameScene : Scene
     {
         base.Update(gameTime);
 
+        // เพิ่ม objects ใหม่
         foreach (var obj in _objectsToAdd)
         {
             AddGameObject(obj);
         }
         _objectsToAdd.Clear();
 
+        //  Projectile vs Target
+        CheckProjectileCollisions();
+
+        // ลบ objects ที่ไม่ active
         _objectsToRemove.Clear();
         foreach (var obj in GameObjects)
         {
@@ -79,6 +139,41 @@ public class GameScene : Scene
         foreach (var obj in _objectsToRemove)
         {
             RemoveGameObject(obj);
+            _targets.Remove(obj);  // ลบออกจาก targets list ด้วย
+        }
+    }
+
+    private void CheckProjectileCollisions()
+    {
+        foreach (var obj in GameObjects)
+        {
+            if (obj.Tag != "Projectile" || !obj.Active) continue;
+
+            var projectile = obj as Projectile;
+            if (projectile == null) continue;
+
+            var projectileCollider = projectile.GetComponent<CircleCollider>();
+            if (projectileCollider == null) continue;
+
+            foreach (var target in _targets)
+            {
+                if (!target.Active) continue;
+
+                var targetCollider = target.GetComponent<CircleCollider>();
+                if (targetCollider == null) continue;
+
+                // ใช้ CircleCollider.IsIntersect แทน manual distance check
+                if (projectileCollider.IsIntersect(targetCollider))
+                {
+                    // ชนแล้ว! Deal damage
+                    var health = target.GetComponent<HealthComponent>();
+                    health?.TakeDamage(projectile.Damage);
+
+                    // ทำลาย projectile
+                    projectile.Active = false;
+                    break;  // projectile ชนได้แค่ 1 target
+                }
+            }
         }
     }
 
