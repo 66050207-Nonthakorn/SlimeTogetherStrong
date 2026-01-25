@@ -169,6 +169,10 @@ public class GameScene : Scene
                     var health = target.GetComponent<HealthComponent>();
                     health?.TakeDamage(projectile.Damage);
 
+                    // สร้าง explosion effect ที่ตำแหน่งที่ชน
+                    var explosion = new Explosion(projectile.Position);
+                    _objectsToAdd.Add(explosion);
+
                     // ทำลาย projectile
                     projectile.Active = false;
                     break;  // projectile ชนได้แค่ 1 target

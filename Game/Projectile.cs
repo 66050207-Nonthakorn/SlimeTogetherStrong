@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Engine;
@@ -11,17 +12,17 @@ namespace SlimeTogetherStrong.Game;
 public class Projectile : GameObject
 {
     public Vector2 Direction { get; private set; }
-    public float Speed { get; set; } = 400f;
-    public int Damage { get; set; } = 10;
+    public float Speed { get; set; } = GameConstants.PROJECTILE_SPEED;
+    public int Damage { get; set; } = GameConstants.PROJECTILE_DAMAGE;
 
-    private SpriteRenderer _renderer;
+    private Animator _animator;
 
     public Projectile(Vector2 startPosition, Vector2 direction)
     {
         Tag = "Projectile";
         Position = startPosition;
         Direction = Vector2.Normalize(direction);
-        Scale = new Vector2(0.05f, 0.05f);
+        Scale = new Vector2(GameConstants.PROJECTILE_SCALE, GameConstants.PROJECTILE_SCALE);
 
         SetupRenderer();
         SetupCollider();
@@ -30,27 +31,32 @@ public class Projectile : GameObject
     private void SetupCollider()
     {
         var collider = AddComponent<CircleCollider>();
-        collider.Radius = 10f;  // รัศมี collision ของกระสุน
+        collider.Radius = GameConstants.PROJECTILE_COLLIDER_RADIUS;
         collider.IsTrigger = true;
     }
 
     private void SetupRenderer()
     {
-        _renderer = AddComponent<SpriteRenderer>();
+        _animator = AddComponent<Animator>();
 
-        var texture = ResourceManager.Instance.GetTexture("bullet");
+        var frame1 = ResourceManager.Instance.GetTexture("Fireball/attack/Ranged_Attack-1");
+        var frame2 = ResourceManager.Instance.GetTexture("Fireball/attack/Ranged_Attack-2");
 
-        if (texture == null)
+        // Debug: ตรวจสอบว่าโหลด texture ได้หรือเปล่า
+        if (frame1 == null || frame2 == null)
         {
-            System.Diagnostics.Debug.WriteLine("bullet texture is null");
+            System.Diagnostics.Debug.WriteLine($"Fireball texture not found! frame1={frame1}, frame2={frame2}");
         }
 
-        _renderer.Texture = texture;
+        var attackFrames = new List<Texture2D> { frame1, frame2 };
 
-        if (_renderer.Texture != null)
-        {
-            _renderer.Origin = new Vector2(_renderer.Texture.Width / 2f, _renderer.Texture.Height / 2f);
-        }
+        var attackAnimation = new Animation(attackFrames, 0.1f);
+        _animator.AddAnimation("attack", attackAnimation);
+        _animator.Play("attack");
+
+        // คำนวณมุมหมุนจาก Direction
+        // ภาพลูกไฟหัวชี้ขึ้นบน ต้องบวก 90° (π/2) ให้หัวชี้ไปทาง Direction
+        Rotation = (float)Math.Atan2(Direction.Y, Direction.X) + MathHelper.PiOver2;
     }
 
     public override void Update(GameTime gameTime)

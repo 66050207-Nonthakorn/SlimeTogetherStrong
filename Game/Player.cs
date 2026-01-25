@@ -15,6 +15,9 @@ public class Player : GameObject
     public float CurrentAngle { get; private set; } = 0f;
     public float RotationSpeed { get; set; } = 3f;  // radians per second
 
+    // Animation settings
+    public float IdleEyeOpenMultiplier { get; set; } = 5f;  
+
     // Shooting
     public float ShootCooldown { get; set; } = 0.3f;
     private float _shootTimer = 0f;
@@ -64,6 +67,8 @@ public class Player : GameObject
               ResourceManager.Instance.GetTexture("P_idle_4")
           };
         var idleAnimation = new Animation(idleFrames, 0.15f);
+
+        idleAnimation.SetFrameMultiplier(0, IdleEyeOpenMultiplier);
         _animator.AddAnimation("idle", idleAnimation);
 
         var attackFrames = new List<Texture2D>
