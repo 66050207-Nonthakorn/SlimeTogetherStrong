@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using SlimeTogetherStrong.Engine;
+using SlimeTogetherStrong.Game;
 using System;
 
 public class Castle : GameObject
@@ -11,7 +12,7 @@ public class Castle : GameObject
 
     public Castle(Vector2 position, int maxHP)
     {
-        Position = position;
+        Position = GameConstants.CENTER;
         MaxHP = maxHP;
         CurrentHP = maxHP;
     }
@@ -23,6 +24,7 @@ public class Castle : GameObject
         if (CurrentHP <= 0)
         {
             CurrentHP = 0;
+            Active = false;
             OnDestroyed?.Invoke();
         }
     }

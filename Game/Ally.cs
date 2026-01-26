@@ -1,21 +1,25 @@
 using Microsoft.Xna.Framework;
 using SlimeTogetherStrong.Engine;
+using SlimeTogetherStrong.Game;
 
 public class Ally : GameObject
 {
     public int SlotIndex;
     public LaneData ParentLane;
-    public Vector2 FormationOffset;
 
     public int MaxHP = 100;
     public int CurrentHP;
+
+    
+    const float FORWARD_SPACING = 60f;  
+    const float SIDE_SPACING = 30f;     
+
+    // public Enemy CurrentTarget;
 
     public void Initialize(LaneData lane, int slotIndex)
     {
         ParentLane = lane;
         SlotIndex = slotIndex;
-        FormationOffset = lane.GetFormationPosition(slotIndex);
-
         CurrentHP = MaxHP;
     }
 
@@ -24,22 +28,21 @@ public class Ally : GameObject
         if (ParentLane == null || IsDead())
             return;
 
-        Vector2 basePos =
-            MapManager.Instance.GetPositionOnRing(
-                RingType.Blue_Defense,
-                ParentLane.Angle
-            );
+        float forwardOffset = GameConstants.BLUE_RADIUS + SlotIndex * FORWARD_SPACING;
 
-        Position = basePos + FormationOffset;
+        float sideOffset = (SlotIndex % 2 == 0 ? -1 : 1) * SIDE_SPACING;
+
+        Position =
+            ParentLane.EndPoint
+            - ParentLane.Direction * forwardOffset
+            + ParentLane.Perpendicular * sideOffset;
 
         FindTarget();
     }
 
-
     public void TakeDamage(int damage)
     {
         CurrentHP -= damage;
-
         if (CurrentHP < 0)
             CurrentHP = 0;
 
@@ -54,14 +57,40 @@ public class Ally : GameObject
 
     private void OnDeath()
     {
+        Active = false;
         ParentLane?.RemoveAlly(this);
     }
 
     private void FindTarget()
     {
-        // TODO:
-        // 1. loop enemy list
-        // 2. เช็ค angle ใกล้ ParentLane.Angle
-        // 3. เช็ค distance < AttackRange
+    //     CurrentTarget = null;
+    //     float closestDistance = float.MaxValue;
+
+    //     foreach (var enemy in GameScene.Instance.Enemies)
+    //     {
+    //         if (!enemy.Active)
+    //             continue;
+
+    //         // 1. ต้องอยู่เลนเดียวกัน
+    //         if (enemy.ParentLane != ParentLane)
+    //             continue;
+
+    //         // 2. เช็คระยะ
+    //         float distance =
+    //             Vector2.Distance(enemy.Position, Position);
+
+    //         if (distance > AttackRange)
+    //             continue;
+
+    //         // 3. เลือกตัวที่ใกล้ Castle ที่สุด
+    //         float distanceToCastle =
+    //             Vector2.Distance(enemy.Position, ParentLane.EndPoint);
+
+    //         if (distanceToCastle < closestDistance)
+    //         {
+    //             closestDistance = distanceToCastle;
+    //             CurrentTarget = enemy;
+    //         }
+    //     }
     }
 }

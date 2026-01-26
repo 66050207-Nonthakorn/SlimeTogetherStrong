@@ -1,21 +1,38 @@
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 
 public class LaneData
 {
+    public const int MAX_ALLIES = 4;
+
     public int Index;
-    public float Angle;
+
+    // จุดเริ่มเลน (spawn enemy / ปลายถนน)
+    public Vector2 StartPoint;
+
+    // จุดปลายเลน (Castle)
+    public Vector2 EndPoint;
+
+    // ทิศทางของเลน (enemy เดินตาม)
+    public Vector2 Direction;
+
+    // เวกเตอร์ตั้งฉาก ใช้จัดฟันปลา
+    public Vector2 Perpendicular;
 
     public List<Ally> Allies;
 
-    public const int MAX_ALLIES = 4;
-
-    public LaneData(int index, float angle)
+    public LaneData(int index, Vector2 startPoint, Vector2 endPoint)
     {
         Index = index;
-        Angle = angle;
+        StartPoint = startPoint;
+        EndPoint = endPoint;
+
         Allies = new List<Ally>();
+
+        Direction = Vector2.Normalize(EndPoint - StartPoint);
+
+        // หมุน 90 องศา
+        Perpendicular = new Vector2(-Direction.Y, Direction.X);
     }
 
     public bool CanAddAlly()
@@ -25,7 +42,8 @@ public class LaneData
 
     public void AddAlly(Ally ally)
     {
-        if (!CanAddAlly()) return;
+        if (!CanAddAlly())
+            return;
 
         Allies.Add(ally);
         ally.Initialize(this, Allies.Count - 1);
@@ -33,27 +51,22 @@ public class LaneData
 
     public void RemoveAlly(Ally ally)
     {
-        Allies.Remove(ally);
-    }
+        if (!Allies.Remove(ally))
+            return;
 
-    public Vector2 GetFormationPosition(int slotIndex)
-    {
-        float spacing = 30f;
-        float offset = (slotIndex - (MAX_ALLIES - 1) / 2f) * spacing;
-
-        Vector2 dir = new Vector2(
-            MathF.Cos(Angle),
-            MathF.Sin(Angle)
-        );
-
-        Vector2 normal = new Vector2(-dir.Y, dir.X);
-
-        return normal * offset;
+        // จัด SlotIndex ใหม่ให้ Ally ที่เหลือ
+        for (int i = 0; i < Allies.Count; i++)
+        {
+            Allies[i].SlotIndex = i;
+        }
     }
 
     public void Update(GameTime gameTime)
     {
         foreach (var ally in Allies)
-            ally.Update(gameTime);
+        {
+            if (ally.Active)
+                ally.Update(gameTime);
+        }
     }
 }
