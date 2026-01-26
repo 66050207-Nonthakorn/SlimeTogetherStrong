@@ -8,7 +8,7 @@ public abstract class Scene
 {
     protected List<GameObject> GameObjects { get; } = [];
 
-    public void Load()
+    public virtual void Load()
     {
         foreach (var gameObject in GameObjects)
         {
