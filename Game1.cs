@@ -55,6 +55,17 @@ public class Game1 : Microsoft.Xna.Framework.Game
         ResourceManager.Instance.LoadTexture("P_attack_3", Content.Load<Texture2D>("Player_attack/P_attack_3"));
         ResourceManager.Instance.LoadTexture("P_attack_4", Content.Load<Texture2D>("Player_attack/P_attack_4"));
 
+        // Textures - Fireball Attack (2 frames)
+        ResourceManager.Instance.LoadTexture("Fireball/attack/Ranged_Attack-1", Content.Load<Texture2D>("Fireball/attack/Ranged_Attack-1"));
+        ResourceManager.Instance.LoadTexture("Fireball/attack/Ranged_Attack-2", Content.Load<Texture2D>("Fireball/attack/Ranged_Attack-2"));
+
+        // Textures - Fireball Explosion (6 frames)
+        ResourceManager.Instance.LoadTexture("Fireball/explosion/Fireball_Explosion-1", Content.Load<Texture2D>("Fireball/explosion/Fireball_Explosion-1"));
+        ResourceManager.Instance.LoadTexture("Fireball/explosion/Fireball_Explosion-2", Content.Load<Texture2D>("Fireball/explosion/Fireball_Explosion-2"));
+        ResourceManager.Instance.LoadTexture("Fireball/explosion/Fireball_Explosion-3", Content.Load<Texture2D>("Fireball/explosion/Fireball_Explosion-3"));
+        ResourceManager.Instance.LoadTexture("Fireball/explosion/Fireball_Explosion-4", Content.Load<Texture2D>("Fireball/explosion/Fireball_Explosion-4"));
+        ResourceManager.Instance.LoadTexture("Fireball/explosion/Fireball_Explosion-5", Content.Load<Texture2D>("Fireball/explosion/Fireball_Explosion-5"));
+        ResourceManager.Instance.LoadTexture("Fireball/explosion/Fireball_Explosion-6", Content.Load<Texture2D>("Fireball/explosion/Fireball_Explosion-6"));
 
         // สร้าง Scene หลังจากโหลด texture แล้ว
         SceneManager.Instance.AddScene("GameScene", new GameScene());

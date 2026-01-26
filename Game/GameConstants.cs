@@ -19,4 +19,10 @@ using Microsoft.Xna.Framework;
       // Lanes
       public const int LANE_COUNT = 9;
       public const float LANE_ANGLE_STEP = 360f / LANE_COUNT;  // 40 degrees per lane
+
+      // Projectile & Effects
+      public const float PROJECTILE_SCALE = 0.8f;     // Scale สำหรับกระสุนและระเบิด
+      public const float PROJECTILE_SPEED = 400f;   // ความเร็วกระสุน
+      public const int PROJECTILE_DAMAGE = 10;      // ดาเมจกระสุน
+      public const float PROJECTILE_COLLIDER_RADIUS = 20f; // รัศมี collision
   }
