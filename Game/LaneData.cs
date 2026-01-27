@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 public class LaneData
@@ -29,10 +30,12 @@ public class LaneData
 
         Allies = new List<Ally>();
 
-        Direction = Vector2.Normalize(EndPoint - StartPoint);
+        Direction = Vector2.Normalize(StartPoint - EndPoint);
 
         // หมุน 90 องศา
         Perpendicular = new Vector2(-Direction.Y, Direction.X);
+
+        Vector2 fromCastle = StartPoint - EndPoint;
     }
 
     public bool CanAddAlly()
@@ -68,5 +71,10 @@ public class LaneData
             if (ally.Active)
                 ally.Update(gameTime);
         }
+    }
+
+    internal int GetNextAllySlotIndex()
+    {
+        throw new NotImplementedException();
     }
 }

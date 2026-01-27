@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Components.Physics;
@@ -17,19 +18,88 @@ public class GameScene : Scene
     private List<GameObject> _objectsToAdd = new List<GameObject>();
     private List<GameObject> _targets = new List<GameObject>();  // สำหรับ test collision
 
+    // test ally 
+    private bool _isPlacingAlly = false;
+    private MapManager _mapManager;
+    private KeyboardState _prevKeyboard;
+    private MouseState _prevMouse;
+
+
 
     public GameScene()
     {
+        _mapManager = new MapManager();
+
         CreateCastle();
         CreatePlayer();
         CreateTestTargets();  // สร้าง dummy targets สำหรับทดสอบ ถ้ามี enermy แล้วจะเอามาแทนตรงนี้
     }
 
+    private Ally CreateAlly(LaneData lane)
+    {
+        if (lane == null || !lane.CanAddAlly())
+            return null;
+
+        Ally ally = new Ally();
+        ally.ParentLane = lane;
+        ally.Tag = "Ally";
+
+        var renderer = ally.AddComponent<SpriteRenderer>();
+        renderer.Texture = ResourceManager.Instance.GetTexture("castle");
+        if (renderer.Texture != null)
+        {
+            renderer.Origin =
+                new Vector2(renderer.Texture.Width / 2f, renderer.Texture.Height / 2f);
+        }
+
+        ally.Scale = new Vector2(0.04f, 0.04f);
+
+        var collider = ally.AddComponent<CircleCollider>();
+        collider.Radius = 20f;
+
+        lane.AddAlly(ally);
+        AddGameObject(ally);
+
+        return ally;
+    }
+
+    private LaneData GetLaneFromMouse(Vector2 mousePos)
+    {
+        LaneData closestLane = null;
+        float minDistance = 35f; // ความกว้างถนน / tolerance
+
+        foreach (LaneData lane in _mapManager.Lanes)
+        {
+            Vector2 laneVec = lane.StartPoint - lane.EndPoint;
+            float laneLength = laneVec.Length();
+            Vector2 laneDir = lane.Direction; // ต้องชี้จาก End → Start
+
+            Vector2 toMouse = mousePos - lane.EndPoint;
+            float proj = Vector2.Dot(toMouse, laneDir);
+
+            if (proj < 0)
+                continue;
+
+            Vector2 closestPoint =
+                lane.EndPoint + laneDir * proj;
+
+            float distance =
+                Vector2.Distance(mousePos, closestPoint);
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestLane = lane;
+            }
+        }
+
+        return closestLane;
+    }
+
     private void CreateCastle()
     {
-        var castle = new GameObject();
+        Castle castle = new Castle(GameConstants.CENTER, 100);
         castle.Scale = new Vector2(0.1f, 0.1f);
-        castle.Position = GameConstants.CENTER;
         castle.Tag = "Castle";
 
         var renderer = castle.AddComponent<SpriteRenderer>();
@@ -114,6 +184,8 @@ public class GameScene : Scene
 
     public override void Update(GameTime gameTime)
     {
+        // _mapManager.Update(gameTime);
+
         base.Update(gameTime);
 
         // เพิ่ม objects ใหม่
@@ -125,6 +197,9 @@ public class GameScene : Scene
 
         //  Projectile vs Target
         CheckProjectileCollisions();
+
+        // Place Ally
+        CheckPlaceAlly();
 
         // ลบ objects ที่ไม่ active
         _objectsToRemove.Clear();
@@ -141,6 +216,48 @@ public class GameScene : Scene
             RemoveGameObject(obj);
             _targets.Remove(obj);  // ลบออกจาก targets list ด้วย
         }
+    }
+
+    private void CheckPlaceAlly()
+    {
+
+        var keyboard = Keyboard.GetState();
+        var mouse = Mouse.GetState();
+
+        // กด Q ครั้งเดียว → เข้าโหมดวาง Ally
+        if (keyboard.IsKeyDown(Keys.Q) && _prevKeyboard.IsKeyUp(Keys.Q))
+        {
+            _isPlacingAlly = true;
+        }
+
+        // คลิกซ้ายครั้งเดียว → วาง Ally
+        if (_isPlacingAlly &&
+            mouse.LeftButton == ButtonState.Pressed &&
+            _prevMouse.LeftButton == ButtonState.Released)
+        {
+            Vector2 mousePos = new Vector2(mouse.X, mouse.Y);
+            LaneData lane = GetLaneFromMouse(mousePos);
+
+            if (lane != null)
+            {
+                CreateAlly(lane);
+                _isPlacingAlly = false;
+            }
+        }
+
+        if (_isPlacingAlly)
+        {
+            var lane = GetLaneFromMouse(
+                new Vector2(Mouse.GetState().X, Mouse.GetState().Y)
+            );
+
+            if (lane != null)
+                System.Diagnostics.Debug.WriteLine($"HOVER LANE {lane.Index}");
+        }
+
+        // เก็บ state ก่อนหน้า
+        _prevKeyboard = keyboard;
+        _prevMouse = mouse;
     }
 
     private void CheckProjectileCollisions()

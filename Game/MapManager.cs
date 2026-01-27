@@ -1,24 +1,21 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Game;
 
 public class MapManager
 {
     public const int LANE_COUNT = 6;
 
-    public Vector2 CenterPosition;
+    public Vector2 CenterPosition = GameConstants.CENTER;
     public LaneData[] Lanes;
     public Castle Castle;
-
     public static MapManager Instance { get; private set; }
 
-    public MapManager(Vector2 center)
+    public MapManager()
     {
         Instance = this;
-        CenterPosition = center;
 
-        Castle = new Castle(center, 100);
+        Castle = new Castle(CenterPosition, 100);
         InitializeLanes();
     }
 
@@ -26,7 +23,7 @@ public class MapManager
     {
         Lanes = new LaneData[LANE_COUNT];
 
-        float spawnDistance = GameConstants.GREEN_RADIUS + 100f; 
+        float spawnDistance = GameConstants.GREEN_RADIUS; 
 
         for (int i = 0; i < LANE_COUNT; i++)
         {
@@ -38,7 +35,7 @@ public class MapManager
             );
 
             Vector2 startPoint = CenterPosition + dir * spawnDistance;
-            Vector2 endPoint = CenterPosition; // Castle
+            Vector2 endPoint = CenterPosition; 
 
             Lanes[i] = new LaneData(i, startPoint, endPoint);
         }

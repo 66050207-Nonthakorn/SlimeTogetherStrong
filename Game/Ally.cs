@@ -10,10 +10,6 @@ public class Ally : GameObject
     public int MaxHP = 100;
     public int CurrentHP;
 
-    
-    const float FORWARD_SPACING = 60f;  
-    const float SIDE_SPACING = 30f;     
-
     // public Enemy CurrentTarget;
 
     public void Initialize(LaneData lane, int slotIndex)
@@ -28,13 +24,13 @@ public class Ally : GameObject
         if (ParentLane == null || IsDead())
             return;
 
-        float forwardOffset = GameConstants.BLUE_RADIUS + SlotIndex * FORWARD_SPACING;
+        float forwardOffset = GameConstants.BLUE_RADIUS + SlotIndex * GameConstants.FORWARD_SPACING;
 
-        float sideOffset = (SlotIndex % 2 == 0 ? -1 : 1) * SIDE_SPACING;
+        float sideOffset = (SlotIndex % 2 == 0 ? -1 : 1) * GameConstants.SIDE_SPACING;
 
         Position =
             ParentLane.EndPoint
-            - ParentLane.Direction * forwardOffset
+            + ParentLane.Direction * forwardOffset
             + ParentLane.Perpendicular * sideOffset;
 
         FindTarget();
