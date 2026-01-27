@@ -67,6 +67,16 @@ public class Game1 : Microsoft.Xna.Framework.Game
         ResourceManager.Instance.LoadTexture("Fireball/explosion/Fireball_Explosion-5", Content.Load<Texture2D>("Fireball/explosion/Fireball_Explosion-5"));
         ResourceManager.Instance.LoadTexture("Fireball/explosion/Fireball_Explosion-6", Content.Load<Texture2D>("Fireball/explosion/Fireball_Explosion-6"));
 
+        // Textures - Enemy: Warrior class walk (2 frames)
+        ResourceManager.Instance.LoadTexture("Warrior_walk_1", Content.Load<Texture2D>("Enemies/Warrior_walk/Warrior_walk_1"));
+        ResourceManager.Instance.LoadTexture("Warrior_walk_2", Content.Load<Texture2D>("Enemies/Warrior_walk/Warrior_walk_2"));
+
+        // Textures - Enemy: Warrior class attack (4 frames)
+        ResourceManager.Instance.LoadTexture("Warrior_attack_1", Content.Load<Texture2D>("Enemies/Warrior_attack/Warrior_attack_1"));
+        ResourceManager.Instance.LoadTexture("Warrior_attack_2", Content.Load<Texture2D>("Enemies/Warrior_attack/Warrior_attack_2"));
+        ResourceManager.Instance.LoadTexture("Warrior_attack_3", Content.Load<Texture2D>("Enemies/Warrior_attack/Warrior_attack_3"));
+        ResourceManager.Instance.LoadTexture("Warrior_attack_4", Content.Load<Texture2D>("Enemies/Warrior_attack/Warrior_attack_4"));
+
         // สร้าง Scene หลังจากโหลด texture แล้ว
         SceneManager.Instance.AddScene("GameScene", new GameScene());
 

@@ -1,36 +1,44 @@
 using Microsoft.Xna.Framework;
 using SlimeTogetherStrong.Engine;
+using SlimeTogetherStrong.Engine.Components;
+using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Game;
 using System;
 
 public class Castle : GameObject
 {
-    public int MaxHP;
-    public int CurrentHP;
-
-    public event Action OnDestroyed;
-
-    public Castle(Vector2 position, int maxHP)
+    public Castle()
     {
+        Scale = new Vector2(0.1f, 0.1f);
+        Tag = "Castle";
         Position = GameConstants.CENTER;
-        MaxHP = maxHP;
-        CurrentHP = maxHP;
+
+        SetupComponents();
     }
 
-    public void TakeDamage(int damage)
+    private void SetupComponents()
     {
-        CurrentHP -= damage;
+        var renderer = AddComponent<SpriteRenderer>();
+        renderer.Texture = ResourceManager.Instance.GetTexture("castle");
 
-        if (CurrentHP <= 0)
+        if (renderer.Texture != null)
         {
-            CurrentHP = 0;
-            Active = false;
-            OnDestroyed?.Invoke();
+            renderer.Origin = new Vector2(renderer.Texture.Width / 2f, renderer.Texture.Height / 2f);
         }
-    }
 
-    public bool IsDestroyed()
-    {
-        return CurrentHP <= 0;
+        var health = AddComponent<HealthComponent>();
+        health.MaxHP = 100;
+        health.Initialize();
+
+        health.OnDamage += (damage) =>
+        {
+            System.Diagnostics.Debug.WriteLine($"Castle HP: {health.CurrentHP}/{health.MaxHP}");
+        };
+
+        health.OnDeath += () =>
+        {
+            System.Diagnostics.Debug.WriteLine($"Castle has been destroyed, game over!");
+            Active = false;
+        };
     }
 }

@@ -24,6 +24,8 @@ public class GameScene : Scene
     private KeyboardState _prevKeyboard;
     private MouseState _prevMouse;
 
+    public static Castle Castle;
+
 
 
     public GameScene()
@@ -98,11 +100,11 @@ public class GameScene : Scene
 
     private void CreateCastle()
     {
-        Castle castle = new Castle(GameConstants.CENTER, 100);
-        castle.Scale = new Vector2(0.1f, 0.1f);
-        castle.Tag = "Castle";
+        Castle = new Castle();
+        Castle.Scale = new Vector2(0.1f, 0.1f);
+        Castle.Tag = "Castle";
 
-        var renderer = castle.AddComponent<SpriteRenderer>();
+        var renderer = Castle.AddComponent<SpriteRenderer>();
         renderer.Texture = ResourceManager.Instance.GetTexture("castle");
 
         if (renderer.Texture != null)
@@ -110,7 +112,7 @@ public class GameScene : Scene
             renderer.Origin = new Vector2(renderer.Texture.Width / 2f, renderer.Texture.Height / 2f);
         }
 
-        AddGameObject(castle);
+        AddGameObject(Castle);
     }
 
     private void CreatePlayer()
@@ -127,47 +129,16 @@ public class GameScene : Scene
 
         foreach (float angle in angles)
         {
-            var target = new GameObject();
-            target.Tag = "Target";
+            var target = new Enemy();
+            target.SetScene(this);
+            AddGameObject(target);
 
             // Position บน GREEN_RADIUS
             float x = GameConstants.CENTER.X + MathF.Cos(angle) * GameConstants.GREEN_RADIUS;
             float y = GameConstants.CENTER.Y + MathF.Sin(angle) * GameConstants.GREEN_RADIUS;
             target.Position = new Vector2(x, y);
-            target.Scale = new Vector2(0.08f, 0.08f);
 
-            // ใช้ castle texture เป็น placeholder
-            var renderer = target.AddComponent<SpriteRenderer>();
-            renderer.Texture = ResourceManager.Instance.GetTexture("castle");
-            renderer.Tint = Color.Red;  // สีแดงให้เห็นชัด
-            if (renderer.Texture != null)
-            {
-                renderer.Origin = new Vector2(renderer.Texture.Width / 2f, renderer.Texture.Height / 2f);
-            }
-
-            // เพิ่ม CircleCollider
-            var collider = target.AddComponent<CircleCollider>();
-            collider.Radius = 25f;  // รัศมี collision ของ target
-
-            // เพิ่ม HealthComponent
-            var health = target.AddComponent<HealthComponent>();
-            health.MaxHP = 30;  // HP 30 = ยิง 3 ครั้งตาย (Projectile damage = 10)
-            health.Initialize();
-
-            // Event เมื่อโดนยิง
-            health.OnDamage += (dmg) =>
-            {
-                System.Diagnostics.Debug.WriteLine($"HP: {health.CurrentHP}/{health.MaxHP}");
-            };
-
-            // Event เมื่อตาย
-            health.OnDeath += () =>
-            {
-                System.Diagnostics.Debug.WriteLine(" DESTROYED!");
-                target.Active = false;
-            };
-
-            AddGameObject(target);
+            // AddGameObject(target);
             _targets.Add(target);
         }
     }

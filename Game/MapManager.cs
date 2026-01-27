@@ -8,14 +8,14 @@ public class MapManager
 
     public Vector2 CenterPosition = GameConstants.CENTER;
     public LaneData[] Lanes;
-    public Castle Castle;
+    //public Castle Castle;
     public static MapManager Instance { get; private set; }
 
     public MapManager()
     {
         Instance = this;
 
-        Castle = new Castle(CenterPosition, 100);
+        //Castle = new Castle(CenterPosition, 100);
         InitializeLanes();
     }
 

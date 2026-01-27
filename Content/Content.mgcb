@@ -13,6 +13,78 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Enemies/Warrior_attack/Enemy_1Attack-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Warrior_attack/Enemy_1Attack-1.png;Enemies/Warrior_attack/Warrior_attack_1.png
+
+#begin Enemies/Warrior_attack/Enemy_1Attack-2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Warrior_attack/Enemy_1Attack-2.png;Enemies/Warrior_attack/Warrior_attack_2.png
+
+#begin Enemies/Warrior_attack/Enemy_1Attack-3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Warrior_attack/Enemy_1Attack-3.png;Enemies/Warrior_attack/Warrior_attack_3.png
+
+#begin Enemies/Warrior_attack/Enemy_1Attack-4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Warrior_attack/Enemy_1Attack-4.png;Enemies/Warrior_attack/Warrior_attack_4.png
+
+#begin Enemies/Warrior_walk/Enemy_1_Walk-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Warrior_walk/Enemy_1_Walk-1.png;Enemies/Warrior_walk/Warrior_walk_1.png
+
+#begin Enemies/Warrior_walk/Enemy_1_Walk-2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Warrior_walk/Enemy_1_Walk-2.png;Enemies/Warrior_walk/Warrior_walk_2.png
+
 #begin Enemy_Rogue.PNG
 /importer:TextureImporter
 /processor:TextureProcessor
