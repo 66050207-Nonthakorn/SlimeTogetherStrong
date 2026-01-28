@@ -77,6 +77,37 @@ public class Game1 : Microsoft.Xna.Framework.Game
         ResourceManager.Instance.LoadTexture("Warrior_attack_3", Content.Load<Texture2D>("Enemies/Warrior_attack/Warrior_attack_3"));
         ResourceManager.Instance.LoadTexture("Warrior_attack_4", Content.Load<Texture2D>("Enemies/Warrior_attack/Warrior_attack_4"));
 
+        // Textures - Enemy: Ninja class walk (2 frames)
+        ResourceManager.Instance.LoadTexture("Ninja_walk_1", Content.Load<Texture2D>("Enemies/Ninja_walk/Ninja_walk_1"));
+        ResourceManager.Instance.LoadTexture("Ninja_walk_2", Content.Load<Texture2D>("Enemies/Ninja_walk/Ninja_walk_2"));
+
+        // Textures - Enemy: Ninja class attack (4 frames)
+        ResourceManager.Instance.LoadTexture("Ninja_attack_1", Content.Load<Texture2D>("Enemies/Ninja_attack/Ninja_attack_1"));
+        ResourceManager.Instance.LoadTexture("Ninja_attack_2", Content.Load<Texture2D>("Enemies/Ninja_attack/Ninja_attack_2"));
+        ResourceManager.Instance.LoadTexture("Ninja_attack_3", Content.Load<Texture2D>("Enemies/Ninja_attack/Ninja_attack_3"));
+        ResourceManager.Instance.LoadTexture("Ninja_attack_4", Content.Load<Texture2D>("Enemies/Ninja_attack/Ninja_attack_4"));
+
+        // Textures - Enemy: Spearsman class walk (2 frames)
+        ResourceManager.Instance.LoadTexture("Spearsman_walk_1", Content.Load<Texture2D>("Enemies/Spearsman_walk/Spearsman_walk_1"));
+        ResourceManager.Instance.LoadTexture("Spearsman_walk_2", Content.Load<Texture2D>("Enemies/Spearsman_walk/Spearsman_walk_2"));
+
+        // Textures - Enemy: Spearsman class attack (4 frames)
+        ResourceManager.Instance.LoadTexture("Spearsman_attack_1", Content.Load<Texture2D>("Enemies/Spearsman_attack/Spearsman_attack_1"));
+        ResourceManager.Instance.LoadTexture("Spearsman_attack_2", Content.Load<Texture2D>("Enemies/Spearsman_attack/Spearsman_attack_2"));
+        ResourceManager.Instance.LoadTexture("Spearsman_attack_3", Content.Load<Texture2D>("Enemies/Spearsman_attack/Spearsman_attack_3"));
+        ResourceManager.Instance.LoadTexture("Spearsman_attack_4", Content.Load<Texture2D>("Enemies/Spearsman_attack/Spearsman_attack_4"));
+
+        // Textures - Tank class walk (2 frames)
+        ResourceManager.Instance.LoadTexture("Tank_walk_1", Content.Load<Texture2D>("Enemies/Tank_walk/Tank_walk_1"));
+        ResourceManager.Instance.LoadTexture("Tank_walk_2", Content.Load<Texture2D>("Enemies/Tank_walk/Tank_walk_2"));
+
+        // Textures - Tank class attack (5 frames)
+        ResourceManager.Instance.LoadTexture("Tank_attack_1", Content.Load<Texture2D>("Enemies/Tank_attack/Tank_attack_1"));
+        ResourceManager.Instance.LoadTexture("Tank_attack_2", Content.Load<Texture2D>("Enemies/Tank_attack/Tank_attack_2"));
+        ResourceManager.Instance.LoadTexture("Tank_attack_3", Content.Load<Texture2D>("Enemies/Tank_attack/Tank_attack_3"));
+        ResourceManager.Instance.LoadTexture("Tank_attack_4", Content.Load<Texture2D>("Enemies/Tank_attack/Tank_attack_4"));
+        ResourceManager.Instance.LoadTexture("Tank_attack_5", Content.Load<Texture2D>("Enemies/Tank_attack/Tank_attack_5"));
+
         // สร้าง Scene หลังจากโหลด texture แล้ว
         SceneManager.Instance.AddScene("GameScene", new GameScene());
 

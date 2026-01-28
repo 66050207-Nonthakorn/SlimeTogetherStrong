@@ -1,55 +1,77 @@
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Components.Physics;
-using SlimeTogetherStrong.Engine.Managers;
 
 namespace SlimeTogetherStrong.Game;
 
-public class Enemy : GameObject {
-    private float _moveSpeed = 50f;
+public abstract class Enemy : GameObject {
+    // Configurable in derived enemy classes
+    protected GameObject _enemyClass = null;
+    protected float _moveSpeed;
+    protected int _maxHp;
+    protected int _damage;
+    protected float _attackSpeed;
+    protected float _attackRange;
+    protected float _colliderRadius;
+
+    // Enemy state management
     private EnemyState state = EnemyState.Moving;
     private GameObject currentTarget;
 
     // Animation
-    private Animator _animator;
-    private SpriteRenderer _renderer;
+    protected Animator _animator;
+    protected SpriteRenderer _renderer;
 
     // Reference to scene and lane
     private GameScene _scene;
     private LaneData _parentLane;
 
-    public Enemy()
+    protected Enemy()
     {
         Tag = "Enemy";
         Scale = new Vector2(0.2f, 0.2f);
-
-        SetupOtherComponents();
-        SetupRenderer();
-        SetupAnimations();
     }
 
-    private void SetupOtherComponents()
+    protected void SetupEnemy()
     {
-        var collider = AddComponent<CircleCollider>();
-        collider.Radius = 30f;
+        SetupCollider();
+        SetupHealth();
+        SetupCombat();
+    }
 
-        var health = AddComponent<HealthComponent>();
-        health.MaxHP = 40;
+    protected void SetupRenderer()
+    {
+        _renderer = _enemyClass.AddComponent<SpriteRenderer>();
+    }
+
+    protected abstract void SetupAnimations();
+
+    private void SetupCollider() {
+        var collider = _enemyClass.AddComponent<CircleCollider>();
+        collider.Radius = _colliderRadius;
+    }
+    
+    private void SetupHealth() {
+        var health = _enemyClass.AddComponent<HealthComponent>();
+        health.MaxHP = _maxHp;
         health.Initialize();
 
         health.OnDamage += (damage) => {};
 
         health.OnDeath += () =>
         {
-            System.Diagnostics.Debug.WriteLine($"Enemy killed.");
+            System.Diagnostics.Debug.WriteLine($"Killed enemy");
             Active = false;
         };
+    }
 
-        var combat = AddComponent<CombatComponent>();
-        
+    private void SetupCombat() {
+        var combat = _enemyClass.AddComponent<CombatComponent>();
+        combat.Damage = _damage;
+        combat.AttackSpeed = _attackSpeed;
+        combat.AttackRange = _attackRange;
+
         combat.OnAttack += (target) =>
         {
             _animator.Play("attack");
@@ -64,42 +86,6 @@ public class Enemy : GameObject {
     public void SetParentLane(LaneData lane)
     {
         _parentLane = lane;
-    }
-
-    private void SetupRenderer()
-    {
-        _renderer = AddComponent<SpriteRenderer>();
-    }
-
-    private void SetupAnimations()
-    {
-        _animator = AddComponent<Animator>();
-
-        // Walk animation
-        var walkFrames = new List<Texture2D>
-        {
-            ResourceManager.Instance.GetTexture("Warrior_walk_1"),
-            ResourceManager.Instance.GetTexture("Warrior_walk_2")
-        };
-        var walkAnimation = new Animation(walkFrames, 0.2f);
-        _animator.AddAnimation("walk", walkAnimation);
-
-        // Attack animation
-        var attackFrames = new List<Texture2D>
-        {
-            ResourceManager.Instance.GetTexture("Warrior_attack_1"),
-            ResourceManager.Instance.GetTexture("Warrior_attack_2"),
-            ResourceManager.Instance.GetTexture("Warrior_attack_3"),
-            ResourceManager.Instance.GetTexture("Warrior_attack_4")
-        };
-        var attackAnimation = new Animation(attackFrames, 0.2f);
-        _animator.AddAnimation("attack", attackAnimation);
-
-        _animator.Play("walk");
-        if (walkFrames[0] != null)
-        {
-            _renderer.Origin = new Vector2(walkFrames[0].Width / 2f, walkFrames[0].Height / 2f);
-        }
     }
 
     private void Move(float deltaTime) {

@@ -6,6 +6,14 @@ namespace SlimeTogetherStrong.Game;
 
 public class WaveManager
 {
+    private Enemy[] EnemyTypes = new Enemy[]
+    {
+        new Ninja(),
+        new Spearsman(),
+        new Warrior(),
+        new Tank()
+    };
+
     public int CurrentWave = 1;
     public int TotalWaves = 10;
     public float SpawnTimer;
@@ -55,7 +63,11 @@ public class WaveManager
         int laneIndex = _random.Next(0, MapManager.Instance.Lanes.Length);
         LaneData lane = MapManager.Instance.Lanes[laneIndex];
 
-        Enemy enemy = new Enemy();
+        Enemy enemyClass = EnemyTypes[_random.Next(0, EnemyTypes.Length)];
+
+        Enemy enemy = enemyClass.GetType()
+            .GetConstructor(Array.Empty<Type>())
+            .Invoke(null) as Enemy;
         enemy.SetScene(_scene);
         enemy.SetParentLane(lane);
         

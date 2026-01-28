@@ -13,6 +13,234 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Enemies/Ninja_attack/Enemy_4-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Ninja_attack/Enemy_4-1.png;Enemies/Ninja_attack/Ninja_attack_1.png
+
+#begin Enemies/Ninja_attack/Enemy_4-2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Ninja_attack/Enemy_4-2.png;Enemies/Ninja_attack/Ninja_attack_2.png
+
+#begin Enemies/Ninja_attack/Enemy_4-3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Ninja_attack/Enemy_4-3.png;Enemies/Ninja_attack/Ninja_attack_3.png
+
+#begin Enemies/Ninja_attack/Enemy_4-4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Ninja_attack/Enemy_4-4.png;Enemies/Ninja_attack/Ninja_attack_4.png
+
+#begin Enemies/Ninja_walk/Enemy_4_Walk-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Ninja_walk/Enemy_4_Walk-1.png;Enemies/Ninja_walk/Ninja_walk_1.png
+
+#begin Enemies/Ninja_walk/Enemy_4_Walk-2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Ninja_walk/Enemy_4_Walk-2.png;Enemies/Ninja_walk/Ninja_walk_2.png
+
+#begin Enemies/Spearsman_attack/Enemy_2_Attack-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Spearsman_attack/Enemy_2_Attack-1.png;Enemies/Spearsman_attack/Spearsman_attack_1.png
+
+#begin Enemies/Spearsman_attack/Enemy_2_Attack-2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Spearsman_attack/Enemy_2_Attack-2.png;Enemies/Spearsman_attack/Spearsman_attack_2.png
+
+#begin Enemies/Spearsman_attack/Enemy_2_Attack-3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Spearsman_attack/Enemy_2_Attack-3.png;Enemies/Spearsman_attack/Spearsman_attack_3.png
+
+#begin Enemies/Spearsman_attack/Enemy_2_Attack-4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Spearsman_attack/Enemy_2_Attack-4.png;Enemies/Spearsman_attack/Spearsman_attack_4.png
+
+#begin Enemies/Spearsman_walk/Enemy_2_Walk-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Spearsman_walk/Enemy_2_Walk-1.png;Enemies/Spearsman_walk/Spearsman_walk_1.png
+
+#begin Enemies/Spearsman_walk/Enemy_2_Walk-2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Spearsman_walk/Enemy_2_Walk-2.png;Enemies/Spearsman_walk/Spearsman_walk_2.png
+
+#begin Enemies/Tank_attack/Enemy_3_Attack-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Tank_attack/Enemy_3_Attack-1.png;Enemies/Tank_attack/Tank_attack_1.png
+
+#begin Enemies/Tank_attack/Enemy_3_Attack-2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Tank_attack/Enemy_3_Attack-2.png;Enemies/Tank_attack/Tank_attack_2.png
+
+#begin Enemies/Tank_attack/Enemy_3_Attack-3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Tank_attack/Enemy_3_Attack-3.png;Enemies/Tank_attack/Tank_attack_3.png
+
+#begin Enemies/Tank_attack/Enemy_3_Attack-4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Tank_attack/Enemy_3_Attack-4.png;Enemies/Tank_attack/Tank_attack_4.png
+
+#begin Enemies/Tank_attack/Enemy_3_Attack-5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Tank_attack/Enemy_3_Attack-5.png;Enemies/Tank_attack/Tank_attack_5.png
+
+#begin Enemies/Tank_walk/Enemy_3_Walk-1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Tank_walk/Enemy_3_Walk-1.png;Enemies/Tank_walk/Tank_walk_1.png
+
+#begin Enemies/Tank_walk/Enemy_3_Walk-2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Enemies/Tank_walk/Enemy_3_Walk-2.png;Enemies/Tank_walk/Tank_walk_2.png
+
 #begin Enemies/Warrior_attack/Enemy_1Attack-1.png
 /importer:TextureImporter
 /processor:TextureProcessor
