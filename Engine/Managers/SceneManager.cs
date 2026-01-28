@@ -17,6 +17,7 @@ public class SceneManager
     {
         if (_scenes.TryGetValue(sceneName, out var scene))
         {
+            _currentScene?.Unload();
             scene.Load();
             _currentScene = scene;
         }

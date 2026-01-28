@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Game;
 
@@ -23,6 +21,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     protected override void Initialize()
     {
         SceneManager.Instance.AddScene("GameScene", new GameScene());
+
         base.Initialize();
     }
 
@@ -41,6 +40,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     {
         InputManager.Instance.Update();
         SceneManager.Instance.Update(gameTime);
+
         base.Update(gameTime);
     }
 

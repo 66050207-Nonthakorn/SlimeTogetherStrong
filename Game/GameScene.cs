@@ -4,8 +4,8 @@ namespace SlimeTogetherStrong.Game;
 
 class GameScene : Scene
 {
-    public GameScene()
+    public override void Load()
     {
-        
+
     }
 }
