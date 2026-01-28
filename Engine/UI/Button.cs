@@ -8,15 +8,12 @@ namespace SlimeTogetherStrong.Engine.UI;
 
 public class Button : Component
 {
-    public string Text { get; set; }
-    public SpriteFont Font { get; set; }
-    public Color BackgroundColor { get; set; } = Color.Green;
-    public Color HoverColor { get; set; } = Color.DarkGreen;
-    public Color TextColor { get; set; } = Color.White;
     public Vector2 Size { get; set; } = new Vector2(200, 50);
     public Action OnClick { get; set; }
 
-    private Color _currentColor = Color.Green; 
+    public Color OutlineColor { get; set; } = Color.Red;
+    public int OutlineThickness { get; set; } = 1;
+    public bool IsShowOutline { get; set; } = false;
 
     public override void Update(GameTime gameTime)
     {
@@ -25,42 +22,66 @@ public class Button : Component
 
         if (buttonRectangle.Contains(mousePosition))
         {
-            _currentColor = HoverColor;
-
             if (InputManager.Instance.IsMouseButtonDown(0))
             {            
                 OnClick?.Invoke();
             }
         }
-        else
-        {
-            _currentColor = BackgroundColor;
-        }
     }
+
     public override void Draw(SpriteBatch spriteBatch)
     {
-        // Draw button background
-        Texture2D rectTexture = new(spriteBatch.GraphicsDevice, 1, 1);
-        rectTexture.SetData([_currentColor]);
+        if (!IsShowOutline) return;
 
-        Rectangle rectangle = new(
-            (int)base.GameObject.Position.X,
-            (int)base.GameObject.Position.Y,
-            (int)Size.X,
-            (int)Size.Y
+        Texture2D dummyTexture = new(spriteBatch.GraphicsDevice, 1, 1);
+        dummyTexture.SetData([OutlineColor]);
+        
+        // Top outline
+        spriteBatch.Draw(
+            dummyTexture,
+            new Rectangle(
+                (int)GameObject.Position.X - OutlineThickness,
+                (int)GameObject.Position.Y - OutlineThickness,
+                (int)Size.X + OutlineThickness * 2,
+                OutlineThickness
+            ),
+            OutlineColor
         );
-        spriteBatch.Draw(rectTexture, rectangle, _currentColor);
 
-        // Draw button text
-        if (Font != null)
-        {
-            Vector2 textSize = Font.MeasureString(Text);
-            Vector2 textPosition = new(
-                base.GameObject.Position.X + (Size.X - textSize.X) / 2,
-                base.GameObject.Position.Y + (Size.Y - textSize.Y) / 2
-            );
+        // Bottom outline
+        spriteBatch.Draw(
+            dummyTexture,
+            new Rectangle(
+                (int)GameObject.Position.X - OutlineThickness,
+                (int)(GameObject.Position.Y + Size.Y),
+                (int)Size.X + OutlineThickness * 2,
+                OutlineThickness
+            ),
+            OutlineColor
+        );
 
-            spriteBatch.DrawString(Font, Text, textPosition, TextColor);
-        }
+        // Left outline
+        spriteBatch.Draw(
+            dummyTexture,
+            new Rectangle(
+                (int)GameObject.Position.X - OutlineThickness,
+                (int)GameObject.Position.Y - OutlineThickness,
+                OutlineThickness,
+                (int)Size.Y + OutlineThickness * 2
+            ),
+            OutlineColor
+        );
+
+        // Right outline
+        spriteBatch.Draw(
+            dummyTexture,
+            new Rectangle(
+                (int)(GameObject.Position.X + Size.X),
+                (int)GameObject.Position.Y - OutlineThickness,
+                OutlineThickness,
+                (int)Size.Y + OutlineThickness * 2
+            ),
+            OutlineColor
+        );
     }
 }
