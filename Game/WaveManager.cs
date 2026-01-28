@@ -55,12 +55,17 @@ public class WaveManager
         int laneIndex = _random.Next(0, MapManager.Instance.Lanes.Length);
         LaneData lane = MapManager.Instance.Lanes[laneIndex];
 
+        int index = lane.Enemies.Count - 1;
+
         Enemy enemy = new Enemy();
         enemy.SetScene(_scene);
-        enemy.SetParentLane(lane);
+        enemy.SetParentLane(lane, index);
+        lane.AddEnemy(enemy);
         
         // Position enemy at the spawn point of the lane
-        enemy.Position = lane.StartPoint;
+        enemy.Position =
+            lane.StartPoint
+            + lane.Direction * index * 40f; // Spacing out enemies
         
         _scene.AddGameObject(enemy);
         currentWaveEnemies.Add(enemy);
