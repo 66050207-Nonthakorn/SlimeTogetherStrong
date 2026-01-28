@@ -17,32 +17,30 @@ public class Enemy : GameObject {
     private Animator _animator;
     private SpriteRenderer _renderer;
 
-    // Reference to scene
+    // Reference to scene and lane
     private GameScene _scene;
+    private LaneData _parentLane;
 
     public Enemy()
     {
         Tag = "Enemy";
         Scale = new Vector2(0.2f, 0.2f);
 
-        SetupComponentsAndListeners();
+        SetupOtherComponents();
         SetupRenderer();
         SetupAnimations();
     }
 
-    private void SetupComponentsAndListeners()
+    private void SetupOtherComponents()
     {
         var collider = AddComponent<CircleCollider>();
         collider.Radius = 30f;
 
         var health = AddComponent<HealthComponent>();
-        health.MaxHP = 50;
+        health.MaxHP = 40;
         health.Initialize();
 
-        health.OnDamage += (damage) =>
-        {
-            System.Diagnostics.Debug.WriteLine($"Enemy HP: {health.CurrentHP}/{health.MaxHP}");
-        };
+        health.OnDamage += (damage) => {};
 
         health.OnDeath += () =>
         {
@@ -61,6 +59,11 @@ public class Enemy : GameObject {
     public void SetScene(GameScene scene)
     {
         _scene = scene;
+    }
+
+    public void SetParentLane(LaneData lane)
+    {
+        _parentLane = lane;
     }
 
     private void SetupRenderer()
@@ -106,36 +109,39 @@ public class Enemy : GameObject {
 
     private void FindTarget() {
         // Check for Ally in range
-        // Ally nearestAlly = FindNearestAlly();
-        // if (nearestAlly != null && Vector2.Distance(Position, nearestAlly.Position) < 30f) {
-        //     currentTarget = nearestAlly;
-        //     state = EnemyState.Attacking;
-        //     return;
-        // }
+        Ally nearestAlly = FindNearestAlly();
+        if (nearestAlly != null && Vector2.Distance(Position, nearestAlly.Position) < 30f) {
+            currentTarget = nearestAlly;
+            state = EnemyState.Attacking;
+            return;
+        }
         
         // If no Ally, target Castle
-        if (Vector2.Distance(Position, GameConstants.CENTER) < 50f) {
+        if (Vector2.Distance(Position, GameConstants.CENTER) < 80f) {
             currentTarget = GameScene.Castle;
             state = EnemyState.Attacking;
         }
     }
 
-    // private Ally FindNearestAlly() {
-    //     Ally nearestAlly = null;
-    //     float nearestDistance = float.MaxValue;
+    private Ally FindNearestAlly() {
+        Ally nearestAlly = null;
+        float nearestDistance = float.MaxValue;
 
-    //     foreach (var obj in MapManager.GameObjects) {
-    //         if (obj is Ally ally) {
-    //             float distance = Vector2.Distance(Position, ally.Position);
-    //             if (distance < nearestDistance) {
-    //                 nearestDistance = distance;
-    //                 nearestAlly = ally;
-    //             }
-    //         }
-    //     }
+        if (_parentLane == null)
+            return null;
 
-    //     return nearestAlly;
-    // }
+        foreach (var ally in _parentLane.Allies) {
+            if (ally.Active) {
+                float distance = Vector2.Distance(Position, ally.Position);
+                if (distance < nearestDistance) {
+                    nearestDistance = distance;
+                    nearestAlly = ally;
+                }
+            }
+        }
+
+        return nearestAlly;
+    }
 
     private void UpdateAnimation()
     {
@@ -156,7 +162,7 @@ public class Enemy : GameObject {
                 break;
                 
             case EnemyState.Attacking:
-                if (currentTarget == null || currentTarget.GetComponent<HealthComponent>()?.IsDead() != false) {
+                if (currentTarget == null || currentTarget.GetComponent<HealthComponent>().IsDead()) {
                     state = EnemyState.Moving;
                     currentTarget = null;
                 } else {

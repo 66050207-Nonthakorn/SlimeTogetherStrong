@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
-using SlimeTogetherStrong.Game;
+
+namespace SlimeTogetherStrong.Game;
 
 public class MapManager
 {
@@ -23,7 +24,7 @@ public class MapManager
     {
         Lanes = new LaneData[LANE_COUNT];
 
-        float spawnDistance = GameConstants.GREEN_RADIUS; 
+        float spawnDistance = GameConstants.ENEMY_SPAWN_RADIUS; 
 
         for (int i = 0; i < LANE_COUNT; i++)
         {

@@ -21,6 +21,7 @@ public class GameScene : Scene
     // test ally 
     private bool _isPlacingAlly = false;
     private MapManager _mapManager;
+    private WaveManager _waveManager;
     private KeyboardState _prevKeyboard;
     private MouseState _prevMouse;
 
@@ -31,10 +32,13 @@ public class GameScene : Scene
     public GameScene()
     {
         _mapManager = new MapManager();
+        _waveManager = new WaveManager(); // _mapManager, this
+        _waveManager.SetScene(this);
 
         CreateCastle();
         CreatePlayer();
-        CreateTestTargets();  // สร้าง dummy targets สำหรับทดสอบ ถ้ามี enermy แล้วจะเอามาแทนตรงนี้
+        
+        _waveManager.StartWave();  // Start the first wave
     }
 
     private Ally CreateAlly(LaneData lane)
@@ -58,6 +62,20 @@ public class GameScene : Scene
 
         var collider = ally.AddComponent<CircleCollider>();
         collider.Radius = 20f;
+
+        var health = ally.AddComponent<HealthComponent>();
+        health.MaxHP = 100;
+        health.Initialize();
+
+        health.OnDamage += (damage) =>
+        {
+            ally.GetComponent<SpriteRenderer>().Tint = Color.Red;
+        };
+
+        health.OnDeath += () =>
+        {
+            ally.Active = false;
+        };
 
         lane.AddAlly(ally);
         AddGameObject(ally);
@@ -104,14 +122,6 @@ public class GameScene : Scene
         Castle.Scale = new Vector2(0.1f, 0.1f);
         Castle.Tag = "Castle";
 
-        var renderer = Castle.AddComponent<SpriteRenderer>();
-        renderer.Texture = ResourceManager.Instance.GetTexture("castle");
-
-        if (renderer.Texture != null)
-        {
-            renderer.Origin = new Vector2(renderer.Texture.Width / 2f, renderer.Texture.Height / 2f);
-        }
-
         AddGameObject(Castle);
     }
 
@@ -120,27 +130,6 @@ public class GameScene : Scene
         _player = new Player();
         _player.SetScene(this);
         AddGameObject(_player);
-    }
-
-    private void CreateTestTargets()
-    {
-        // สร้าง 3 targets บน GREEN_RADIUS สำหรับทดสอบ
-        float[] angles = { 0f, MathHelper.PiOver2, MathHelper.Pi };  // 0°, 90°, 180°
-
-        foreach (float angle in angles)
-        {
-            var target = new Enemy();
-            target.SetScene(this);
-            AddGameObject(target);
-
-            // Position บน GREEN_RADIUS
-            float x = GameConstants.CENTER.X + MathF.Cos(angle) * GameConstants.GREEN_RADIUS;
-            float y = GameConstants.CENTER.Y + MathF.Sin(angle) * GameConstants.GREEN_RADIUS;
-            target.Position = new Vector2(x, y);
-
-            // AddGameObject(target);
-            _targets.Add(target);
-        }
     }
 
     // Player spawn bullet
@@ -155,6 +144,9 @@ public class GameScene : Scene
 
     public override void Update(GameTime gameTime)
     {
+        // Update wave manager
+        _waveManager.Update(gameTime);
+        
         // _mapManager.Update(gameTime);
 
         base.Update(gameTime);
@@ -222,8 +214,8 @@ public class GameScene : Scene
                 new Vector2(Mouse.GetState().X, Mouse.GetState().Y)
             );
 
-            if (lane != null)
-                System.Diagnostics.Debug.WriteLine($"HOVER LANE {lane.Index}");
+            // if (lane != null)
+            //     System.Diagnostics.Debug.WriteLine($"HOVER LANE {lane.Index}");
         }
 
         // เก็บ state ก่อนหน้า
@@ -243,9 +235,10 @@ public class GameScene : Scene
             var projectileCollider = projectile.GetComponent<CircleCollider>();
             if (projectileCollider == null) continue;
 
-            foreach (var target in _targets)
+            // Check collision against all enemies, not just _targets
+            foreach (var target in GameObjects)
             {
-                if (!target.Active) continue;
+                if (target.Tag != "Enemy" || !target.Active) continue;
 
                 var targetCollider = target.GetComponent<CircleCollider>();
                 if (targetCollider == null) continue;

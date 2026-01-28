@@ -14,7 +14,8 @@ using Microsoft.Xna.Framework;
         // Ring radiuses
         public const float ORANGE_RADIUS = 150f;  // Player ring
         public const float BLUE_RADIUS = 250f;    // Allies
-        public const float GREEN_RADIUS = 350f;   // Start attack enemies 
+        public const float GREEN_RADIUS = 350f;   // Start attack enemies
+        public const float ENEMY_SPAWN_RADIUS = 600f; // Invisible enemy spawn ring
 
         // Lanes
         public const int LANE_COUNT = 9;

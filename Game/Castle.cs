@@ -27,7 +27,7 @@ public class Castle : GameObject
         }
 
         var health = AddComponent<HealthComponent>();
-        health.MaxHP = 100;
+        health.MaxHP = 1000;
         health.Initialize();
 
         health.OnDamage += (damage) =>
