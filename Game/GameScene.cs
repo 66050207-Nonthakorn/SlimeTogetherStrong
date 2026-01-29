@@ -144,6 +144,13 @@ public class GameScene : Scene
 
     public override void Update(GameTime gameTime)
     {
+        // Check for ESC key to open pause menu
+        if (InputManager.Instance.IsKeyPressed(Keys.Escape))
+        {
+            SceneManager.Instance.PushOverlay(new PauseScene());
+            return; // Don't process rest of update when opening pause menu
+        }
+
         // Update wave manager
         _waveManager.Update(gameTime);
         

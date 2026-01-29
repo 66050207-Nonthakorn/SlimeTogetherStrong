@@ -77,7 +77,8 @@ public class MainMenuScene : Scene
 
     private void OnStartGameClick()
     {
-        // Load the game scene
+        // Create a fresh GameScene instance each time
+        SceneManager.Instance.AddScene("GameScene", new GameScene());
         SceneManager.Instance.LoadScene("GameScene");
     }
 

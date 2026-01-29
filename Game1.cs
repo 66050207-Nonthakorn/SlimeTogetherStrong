@@ -115,7 +115,6 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         // สร้าง Scene หลังจากโหลด texture แล้ว
         SceneManager.Instance.AddScene("MainMenu", new MainMenuScene());
-        SceneManager.Instance.AddScene("GameScene", new GameScene());
 
         // Start the initial scene
         SceneManager.Instance.LoadScene("MainMenu");

@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Managers;
@@ -46,14 +47,15 @@ public class SettingsScene : Scene
         // Settings title
         var titleObj = new GameObject
         {
-            Position = new Vector2(screenWidth / 2, panelY + 60)
+            Position = new Vector2(screenWidth / 2, panelY + 60),
+            Scale = new Vector2(2, 2)
         };
         var title = titleObj.AddComponent<Text>();
         title.Font = ResourceManager.Instance.GetFont("DefaultFont");
         title.Content = "Settings";
         title.Color = Color.White;
-        titleObj.Scale = new Vector2(2, 2);
-        var titleSize = title.MeasureText();
+        // Use unscaled measurement for origin
+        var titleSize = title.Font.MeasureString(title.Content);
         title.Origin = titleSize / 2;
         AddGameObject(titleObj);
 
@@ -136,6 +138,18 @@ public class SettingsScene : Scene
         AddGameObject(backButton);
 
         base.Load();
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        // Check for ESC key to close settings
+        if (InputManager.Instance.IsKeyPressed(Keys.Escape))
+        {
+            SceneManager.Instance.PopOverlay();
+            return; // Don't process rest of update when closing
+        }
+
+        base.Update(gameTime);
     }
 
     private void OnBackClick()
