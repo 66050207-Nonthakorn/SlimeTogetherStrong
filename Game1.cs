@@ -20,8 +20,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
     protected override void Initialize()
     {
-        _graphics.PreferredBackBufferWidth = 1000;
-        _graphics.PreferredBackBufferHeight = 1000;
+        _graphics.PreferredBackBufferWidth = GameConstants.SCREEN_WIDTH;
+        _graphics.PreferredBackBufferHeight = GameConstants.SCREEN_HEIGHT;
         _graphics.ApplyChanges();
 
         // Set screen dimensions in SceneManager
