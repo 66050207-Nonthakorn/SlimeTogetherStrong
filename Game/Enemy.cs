@@ -20,6 +20,10 @@ public abstract class Enemy : GameObject {
     private EnemyState state = EnemyState.Moving;
     private GameObject currentTarget;
 
+    private bool _isAttacking { get; set; } = false;
+    private float _attackTimer = 0f;
+    private const float ATTACK_DURATION = 1f;
+
     // Animation
     protected Animator _animator;
     protected SpriteRenderer _renderer;
@@ -27,6 +31,7 @@ public abstract class Enemy : GameObject {
     // Reference to scene and lane
     private GameScene _scene;
     private LaneData _parentLane;
+    private int _slotIndex;
 
     protected Enemy()
     {
@@ -65,6 +70,11 @@ public abstract class Enemy : GameObject {
         {
             System.Diagnostics.Debug.WriteLine($"Killed enemy");
             Active = false;
+
+            for (int i = 0; i < _parentLane.Enemies.Count; i++)
+            {
+                _parentLane.Enemies[i].SetSlotIndex(i);
+            }
         };
     }
 
@@ -96,9 +106,10 @@ public abstract class Enemy : GameObject {
         _scene = scene;
     }
 
-    public void SetParentLane(LaneData lane)
+    public void SetParentLane(LaneData lane, int slotIndex)
     {
         _parentLane = lane;
+        _slotIndex = slotIndex;
     }
 
     private void Move(float deltaTime) {
@@ -142,6 +153,32 @@ public abstract class Enemy : GameObject {
         return nearestAlly;
     }
 
+    public void SetSlotIndex(int index)
+    {
+        _slotIndex = index;
+    }
+
+    private void StartAttack()
+    {
+        if (_isAttacking) return;
+
+        _isAttacking = true;
+        _attackTimer = ATTACK_DURATION;
+        _animator.Play("attack");
+    }
+
+    private void UpdateAttackState(float deltaTime)
+    {
+        if (!_isAttacking) return;
+
+            _attackTimer -= deltaTime;
+            if (_attackTimer <= 0)
+        {
+            _isAttacking = false;
+            _animator.Play("idle");
+        }
+    }
+
     private void UpdateAnimation()
     {
         var currentAnimation = _animator.GetCurrentAnimation();
@@ -161,11 +198,21 @@ public abstract class Enemy : GameObject {
                 break;
                 
             case EnemyState.Attacking:
-                if (currentTarget == null || currentTarget.GetComponent<HealthComponent>().IsDead()) {
+                if (currentTarget == null ||
+                    currentTarget.GetComponent<HealthComponent>()?.IsDead() == true)
+                {
                     state = EnemyState.Moving;
                     currentTarget = null;
-                } else {
-                    GetComponent<CombatComponent>().Attack(currentTarget);
+                    _animator.Play("walk");
+                    break;
+                }
+
+                var combat = GetComponent<CombatComponent>();
+
+                if (combat.CanAttack())
+                {
+                    combat.Attack(currentTarget);
+                    StartAttack(); 
                 }
                 break;
         }

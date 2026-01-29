@@ -65,46 +65,15 @@ public class GameScene : Scene
         _gameUI.Initialize();
     }
 
-    private Ally CreateAlly(LaneData lane)
+    private void CreateAlly(LaneData lane)
     {
-        if (lane == null || !lane.CanAddAlly())
-            return null;
-
-        Ally ally = new Ally();
-        ally.ParentLane = lane;
-        ally.Tag = "Ally";
-
-        var renderer = ally.AddComponent<SpriteRenderer>();
-        renderer.Texture = ResourceManager.Instance.GetTexture("castle");
-        if (renderer.Texture != null)
+        if (lane != null && lane.CanAddAlly())
         {
-            renderer.Origin =
-                new Vector2(renderer.Texture.Width / 2f, renderer.Texture.Height / 2f);
-        }
-
-        ally.Scale = new Vector2(0.04f, 0.04f);
-
-        var collider = ally.AddComponent<CircleCollider>();
-        collider.Radius = 20f;
-
-        var health = ally.AddComponent<HealthComponent>();
-        health.MaxHP = 100;
-        health.Initialize();
-
-        health.OnDamage += (damage) =>
-        {
-            ally.GetComponent<SpriteRenderer>().Tint = Color.Red;
-        };
-
-        health.OnDeath += () =>
-        {
-            ally.Active = false;
-        };
-
-        lane.AddAlly(ally);
-        AddGameObject(ally);
-
-        return ally;
+            Ally ally = new Ally();
+            ally.SetScene(this);
+            lane.AddAlly(ally);
+            _objectsToAdd.Add(ally);
+        }    
     }
 
     private LaneData GetLaneFromMouse(Vector2 mousePos)
@@ -143,9 +112,6 @@ public class GameScene : Scene
     private void CreateCastle()
     {
         Castle = new Castle();
-        Castle.Scale = new Vector2(0.1f, 0.1f);
-        Castle.Tag = "Castle";
-
         AddGameObject(Castle);
     }
 

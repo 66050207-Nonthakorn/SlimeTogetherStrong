@@ -41,7 +41,7 @@ public class Player : GameObject
     public Player()
     {
         Tag = "Player";
-        Scale = new Vector2(0.3f, 0.3f);
+        Scale = new Vector2(0.2f, 0.2f);
 
         UpdatePositionOnRing();
         SetupRenderer();

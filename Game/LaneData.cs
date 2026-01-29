@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using SlimeTogetherStrong.Game;
 using System;
 using System.Collections.Generic;
 
@@ -21,6 +22,7 @@ public class LaneData
     public Vector2 Perpendicular;
 
     public List<Ally> Allies;
+    public List<Enemy> Enemies;
 
     public LaneData(int index, Vector2 startPoint, Vector2 endPoint)
     {
@@ -29,6 +31,7 @@ public class LaneData
         EndPoint = endPoint;
 
         Allies = new List<Ally>();
+        Enemies = new List<Enemy>();
 
         Direction = Vector2.Normalize(StartPoint - EndPoint);
 
@@ -49,19 +52,16 @@ public class LaneData
             return;
 
         Allies.Add(ally);
-        ally.Initialize(this, Allies.Count - 1);
+        ally.SetupLane(this, Allies.Count - 1);
     }
 
-    public void RemoveAlly(Ally ally)
+    public void AddEnemy(Enemy enemy)
     {
-        if (!Allies.Remove(ally))
+        if (!CanAddAlly())
             return;
 
-        // จัด SlotIndex ใหม่ให้ Ally ที่เหลือ
-        for (int i = 0; i < Allies.Count; i++)
-        {
-            Allies[i].SlotIndex = i;
-        }
+        Enemies.Add(enemy);
+        enemy.SetParentLane(this, Enemies.Count - 1);
     }
 
     public void Update(GameTime gameTime)
