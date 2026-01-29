@@ -1,12 +1,15 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SlimeTogetherStrong.Engine.UI;
 
 namespace SlimeTogetherStrong.Engine;
 
 public abstract class Scene
 {
     protected List<GameObject> GameObjects { get; } = [];
+    public bool IsActive { get; set; } = true;
 
     public virtual void Load()
     {
@@ -33,7 +36,15 @@ public abstract class Scene
     {
         foreach (var gameObject in GameObjects)
         {
-            gameObject.Draw(spriteBatch);
+            // If it's a UIElement, use DrawElement to draw with children
+            if (gameObject is UIElement uiElement)
+            {
+                uiElement.DrawElement(spriteBatch);
+            }
+            else
+            {
+                gameObject.Draw(spriteBatch);
+            }
         }
     }
 

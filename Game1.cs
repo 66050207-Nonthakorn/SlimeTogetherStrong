@@ -24,6 +24,10 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _graphics.PreferredBackBufferHeight = 1000;
         _graphics.ApplyChanges();
 
+        // Set screen dimensions in SceneManager
+        SceneManager.Instance.ScreenWidth = _graphics.PreferredBackBufferWidth;
+        SceneManager.Instance.ScreenHeight = _graphics.PreferredBackBufferHeight;
+
         base.Initialize();
     }
 
@@ -33,6 +37,9 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         // Should load resources before starting the scene
         ResourceManager.Instance.LoadFont("DefaultFont", Content.Load<SpriteFont>("font"));
+
+        // Textures - UI
+        ResourceManager.Instance.LoadTexture("Main_Menu", Content.Load<Texture2D>("UI/Main_Menu"));
 
         // Textures - Main
         ResourceManager.Instance.LoadTexture("castle", Content.Load<Texture2D>("Main/castle"));
@@ -107,10 +114,11 @@ public class Game1 : Microsoft.Xna.Framework.Game
         ResourceManager.Instance.LoadTexture("Tank_attack_5", Content.Load<Texture2D>("Enemies/Tank_attack/Tank_attack_5"));
 
         // สร้าง Scene หลังจากโหลด texture แล้ว
+        SceneManager.Instance.AddScene("MainMenu", new MainMenuScene());
         SceneManager.Instance.AddScene("GameScene", new GameScene());
 
         // Start the initial scene
-        SceneManager.Instance.LoadScene("GameScene");
+        SceneManager.Instance.LoadScene("MainMenu");
     }
 
     protected override void Update(GameTime gameTime)
