@@ -37,6 +37,9 @@ public class GameScene : Scene
     // Static reference to get player (for skill system)
     private static Player _staticPlayerRef;
     public static Player GetPlayer() => _staticPlayerRef;
+    
+    // Game over flag
+    private bool _gameOver = false;
 
 
 
@@ -44,6 +47,9 @@ public class GameScene : Scene
     {
         // Initialize XP Manager for this game session
         _xpManager = new XPManager();
+        
+        // Subscribe to level up event
+        _xpManager.OnLevelUp += OnLevelUp;
         
         _mapManager = new MapManager();
         _waveManager = new WaveManager(); // _mapManager, this
@@ -163,6 +169,10 @@ public class GameScene : Scene
 
     public override void Update(GameTime gameTime)
     {
+        // Don't update if game is over
+        if (_gameOver)
+            return;
+            
         // Check for ESC key to open pause menu
         if (InputManager.Instance.IsKeyPressed(Keys.Escape))
         {
@@ -174,6 +184,37 @@ public class GameScene : Scene
         if (InputManager.Instance.IsKeyPressed(Keys.X))
         {
             _xpManager.AddXP(10);
+        }
+        
+        // Debug: Press F1 to trigger win screen
+        if (InputManager.Instance.IsKeyPressed(Keys.F1))
+        {
+            ShowGameOver(true);
+            return;
+        }
+        
+        // Debug: Press F2 to trigger lose screen
+        if (InputManager.Instance.IsKeyPressed(Keys.F2))
+        {
+            ShowGameOver(false);
+            return;
+        }
+
+        // Debug: Press L to test level up overlay
+        if (InputManager.Instance.IsKeyPressed(Keys.L))
+        {
+            ShowLevelUpOverlay();
+        }
+        
+        // Check lose condition: Castle HP <= 0
+        if (Castle != null)
+        {
+            var castleHealth = Castle.GetComponent<HealthComponent>();
+            if (castleHealth != null && castleHealth.CurrentHP <= 0)
+            {
+                ShowGameOver(false);
+                return;
+            }
         }
 
         // Update skill manager
@@ -295,6 +336,77 @@ public class GameScene : Scene
                 }
             }
         }
+    }
+
+    private void ShowLevelUpOverlay()
+    {
+        // Create sample upgrade options
+        var upgradeOptions = new List<UpgradeOption>
+        {
+            new UpgradeOption
+            {
+                EntityTexture = ResourceManager.Instance.GetTexture("P_idle_0"),
+                StatsIconTexture = ResourceManager.Instance.GetTexture("Health_Icon"),
+                EntityName = "Player",
+                StatsName = "Health",
+                StatsIncrease = 50
+            },
+            new UpgradeOption
+            {
+                EntityTexture = ResourceManager.Instance.GetTexture("castle"),
+                StatsIconTexture = ResourceManager.Instance.GetTexture("Health_Icon"),
+                EntityName = "Castle",
+                StatsName = "Defense",
+                StatsIncrease = 25
+            },
+            new UpgradeOption
+            {
+                EntityTexture = ResourceManager.Instance.GetTexture("P_idle_0"),
+                StatsIconTexture = ResourceManager.Instance.GetTexture("Mana_Icon"),
+                EntityName = "Player",
+                StatsName = "Mana",
+                StatsIncrease = 30
+            }
+        };
+
+        // Show overlay with callback
+        var levelUpScene = new LevelUpOverlayScene(upgradeOptions, OnUpgradeSelected);
+        SceneManager.Instance.PushOverlay(levelUpScene);
+    }
+
+    private void OnLevelUp(int newLevel)
+    {
+        System.Console.WriteLine($"Level up! Now level {newLevel}");
+        ShowLevelUpOverlay();
+    }
+
+    private void OnUpgradeSelected(int cardIndex)
+    {
+        System.Console.WriteLine($"Selected upgrade card {cardIndex}");
+        // Handle the upgrade logic here based on cardIndex
+        // For example:
+        // if (cardIndex == 0) { /* Upgrade player health */ }
+        // if (cardIndex == 1) { /* Upgrade castle defense */ }
+        // if (cardIndex == 2) { /* Upgrade player mana */ }
+    }
+    
+    private void ShowGameOver(bool isWin)
+    {
+        if (_gameOver)
+            return;
+            
+        _gameOver = true;
+        
+        // Get play time from timer UI
+        string playTime = "00:00";
+        if (_gameUI != null && _gameUI.TimerUI != null)
+        {
+            playTime = _gameUI.TimerUI.GetFormattedTime();
+        }
+        
+        // Show game over overlay (similar to level up overlay)
+        var gameOverScene = new GameOverScene(isWin, playTime);
+        SceneManager.Instance.PushOverlay(gameOverScene);
     }
 
     // debug rings

@@ -10,6 +10,7 @@ public class GameSceneUI
 {
     private XPManager _xpManager;
     private XPBar _xpBar;
+    private TimerUI _timerUI;
     private SkillCooldownUI _skillCooldownUI;
     private VerticalBarWithIcon _castleHealthBar;
     private VerticalBarWithIcon _playerManaBar;
@@ -26,6 +27,7 @@ public class GameSceneUI
     public void Initialize()
     {
         CreateXPUI();
+        CreateTimerUI();
         CreateSkillUI();
         CreateCastleHealthBar();
         CreatePlayerManaBar();
@@ -40,6 +42,16 @@ public class GameSceneUI
             _xpManager
         );
         _scene.AddGameObject(_xpBar);
+    }
+
+    private void CreateTimerUI()
+    {
+        // Create timer UI below XP bar (centered)
+        float timerY = 20f; // Below XP bar (which is 15px tall)
+        _timerUI = new TimerUI(
+            new Vector2(SceneManager.Instance.ScreenWidth / 2, timerY)
+        );
+        _scene.AddGameObject(_timerUI);
     }
 
     private void CreateSkillUI()
@@ -119,6 +131,7 @@ public class GameSceneUI
 
     // Public accessors if needed
     public XPBar XPBar => _xpBar;
+    public TimerUI TimerUI => _timerUI;
     public SkillCooldownUI SkillCooldownUI => _skillCooldownUI;
     public VerticalBarWithIcon CastleHealthBar => _castleHealthBar;
     public VerticalBarWithIcon PlayerManaBar => _playerManaBar;
