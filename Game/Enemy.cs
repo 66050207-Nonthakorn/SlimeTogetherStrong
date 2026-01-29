@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Components.Physics;
+using SlimeTogetherStrong.Engine.UI;
 
 namespace SlimeTogetherStrong.Game;
 
@@ -38,6 +39,7 @@ public abstract class Enemy : GameObject {
         SetupCollider();
         SetupHealth();
         SetupCombat();
+        SetupHealthBar();
     }
 
     protected void SetupRenderer()
@@ -76,6 +78,17 @@ public abstract class Enemy : GameObject {
         {
             _animator.Play("attack");
         };
+    }
+
+    private void SetupHealthBar()
+    {
+        var healthBar = _enemyClass.AddComponent<HealthBar>();
+        healthBar.Size = new Vector2(50, 6);
+        healthBar.Offset = new Vector2(0, -40);
+        healthBar.FillColor = Color.Red;
+        healthBar.BackgroundColor = new Color(60, 60, 60);
+        healthBar.BorderColor = Color.Black;
+        healthBar.BorderThickness = 1;
     }
 
     public void SetScene(GameScene scene)

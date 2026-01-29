@@ -34,6 +34,10 @@ public class Player : GameObject
     // Reference to scene
     private GameScene _scene;
 
+    // Mana system
+    private ManaComponent _manaComponent;
+    public ManaComponent ManaComponent => _manaComponent;
+
     public Player()
     {
         Tag = "Player";
@@ -42,6 +46,15 @@ public class Player : GameObject
         UpdatePositionOnRing();
         SetupRenderer();
         SetupAnimations();
+        SetupMana();
+    }
+
+    private void SetupMana()
+    {
+        _manaComponent = AddComponent<ManaComponent>();
+        _manaComponent.MaxMana = 100;
+        _manaComponent.ManaRegenRate = 5f; // 5 mana per second
+        _manaComponent.Initialize();
     }
 
     public void SetScene(GameScene scene)

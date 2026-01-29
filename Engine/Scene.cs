@@ -34,16 +34,21 @@ public abstract class Scene
 
     public void Draw(SpriteBatch spriteBatch)
     {
+        // Draw regular game objects first
         foreach (var gameObject in GameObjects)
         {
-            // If it's a UIElement, use DrawElement to draw with children
+            if (gameObject is not UIElement)
+            {
+                gameObject.Draw(spriteBatch);
+            }
+        }
+
+        // Draw UI elements last (on top)
+        foreach (var gameObject in GameObjects)
+        {
             if (gameObject is UIElement uiElement)
             {
                 uiElement.DrawElement(spriteBatch);
-            }
-            else
-            {
-                gameObject.Draw(spriteBatch);
             }
         }
     }

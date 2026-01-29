@@ -7,6 +7,7 @@ using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Components.Physics;
 using SlimeTogetherStrong.Engine.Managers;
+using SlimeTogetherStrong.Engine.UI;
 
 namespace SlimeTogetherStrong.Game;
 
@@ -27,10 +28,23 @@ public class GameScene : Scene
 
     public static Castle Castle;
 
+    // XP System
+    private XPManager _xpManager;
+    
+    // UI Management
+    private GameSceneUI _gameUI;
+
+    // Static reference to get player (for skill system)
+    private static Player _staticPlayerRef;
+    public static Player GetPlayer() => _staticPlayerRef;
+
 
 
     public GameScene()
     {
+        // Initialize XP Manager for this game session
+        _xpManager = new XPManager();
+        
         _mapManager = new MapManager();
         _waveManager = new WaveManager(); // _mapManager, this
         _waveManager.SetScene(this);
@@ -39,6 +53,10 @@ public class GameScene : Scene
         CreatePlayer();
         
         _waveManager.StartWave();  // Start the first wave
+        
+        // Initialize UI
+        _gameUI = new GameSceneUI(this, _xpManager, _player);
+        _gameUI.Initialize();
     }
 
     private Ally CreateAlly(LaneData lane)
@@ -129,6 +147,7 @@ public class GameScene : Scene
     {
         _player = new Player();
         _player.SetScene(this);
+        _staticPlayerRef = _player; // Set static reference
         AddGameObject(_player);
     }
 
@@ -150,6 +169,15 @@ public class GameScene : Scene
             SceneManager.Instance.PushOverlay(new PauseScene());
             return; // Don't process rest of update when opening pause menu
         }
+
+        // Debug: Press X to add XP
+        if (InputManager.Instance.IsKeyPressed(Keys.X))
+        {
+            _xpManager.AddXP(10);
+        }
+
+        // Update skill manager
+        SkillManager.Instance.Update(gameTime);
 
         // Update wave manager
         _waveManager.Update(gameTime);
@@ -195,10 +223,10 @@ public class GameScene : Scene
         var mouse = Mouse.GetState();
 
         // กด Q ครั้งเดียว → เข้าโหมดวาง Ally
-        if (keyboard.IsKeyDown(Keys.Q) && _prevKeyboard.IsKeyUp(Keys.Q))
-        {
-            _isPlacingAlly = true;
-        }
+        // if (keyboard.IsKeyDown(Keys.Q) && _prevKeyboard.IsKeyUp(Keys.Q))
+        // {
+        //     _isPlacingAlly = true;
+        // }
 
         // คลิกซ้ายครั้งเดียว → วาง Ally
         if (_isPlacingAlly &&

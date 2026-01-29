@@ -40,6 +40,10 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         // Textures - UI
         ResourceManager.Instance.LoadTexture("Main_Menu", Content.Load<Texture2D>("UI/Main_Menu"));
+        ResourceManager.Instance.LoadTexture("Skill_Icon_Active", Content.Load<Texture2D>("UI/Skill_Icon_Active"));
+        ResourceManager.Instance.LoadTexture("Skill_Icon_Inactive", Content.Load<Texture2D>("UI/Skill_Icon_ Unactive"));
+        ResourceManager.Instance.LoadTexture("Health_Icon", Content.Load<Texture2D>("UI/Health"));
+        ResourceManager.Instance.LoadTexture("Mana_Icon", Content.Load<Texture2D>("UI/Mana_point_"));
 
         // Textures - Main
         ResourceManager.Instance.LoadTexture("castle", Content.Load<Texture2D>("Main/castle"));

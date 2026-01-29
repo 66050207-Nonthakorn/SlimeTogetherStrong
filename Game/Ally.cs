@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using SlimeTogetherStrong.Engine;
+using SlimeTogetherStrong.Engine.UI;
 using SlimeTogetherStrong.Game;
 
 public class Ally : GameObject
@@ -10,6 +11,8 @@ public class Ally : GameObject
     public int MaxHP = 100;
     public int CurrentHP;
 
+    private HealthBar _healthBar;
+
     // public Enemy CurrentTarget;
 
     public void Initialize(LaneData lane, int slotIndex)
@@ -17,6 +20,19 @@ public class Ally : GameObject
         ParentLane = lane;
         SlotIndex = slotIndex;
         CurrentHP = MaxHP;
+        
+        SetupHealthBar();
+    }
+
+    private void SetupHealthBar()
+    {
+        _healthBar = AddComponent<HealthBar>();
+        _healthBar.Size = new Vector2(50, 6);
+        _healthBar.Offset = new Vector2(0, -40);
+        _healthBar.FillColor = Color.Green;
+        _healthBar.BackgroundColor = new Color(60, 60, 60);
+        _healthBar.BorderColor = Color.Black;
+        _healthBar.BorderThickness = 1;
     }
 
     public override void Update(GameTime gameTime)
