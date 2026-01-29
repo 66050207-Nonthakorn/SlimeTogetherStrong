@@ -40,6 +40,13 @@ public class Game1 : Microsoft.Xna.Framework.Game
         ResourceManager.Instance.LoadTexture("allies_lane", Content.Load<Texture2D>("Main/allies_lane"));
         ResourceManager.Instance.LoadTexture("bullet", Content.Load<Texture2D>("Main/bullet"));
 
+        // Textures - Castle Idle (5 frames)
+        ResourceManager.Instance.LoadTexture("Castle_idle_0", Content.Load<Texture2D>("Castle_idle/Base-1"));
+        ResourceManager.Instance.LoadTexture("Castle_idle_1", Content.Load<Texture2D>("Castle_idle/Base-2"));
+        ResourceManager.Instance.LoadTexture("Castle_idle_2", Content.Load<Texture2D>("Castle_idle/Base-3"));
+        ResourceManager.Instance.LoadTexture("Castle_idle_3", Content.Load<Texture2D>("Castle_idle/Base-4"));
+        ResourceManager.Instance.LoadTexture("Castle_idle_4", Content.Load<Texture2D>("Castle_idle/Base-5"));
+
         // Textures - Player Idle (5 frames)
         ResourceManager.Instance.LoadTexture("P_idle_0", Content.Load<Texture2D>("Player_idle/P_idle_0"));
         ResourceManager.Instance.LoadTexture("P_idle_1", Content.Load<Texture2D>("Player_idle/P_idle_1"));
@@ -53,6 +60,18 @@ public class Game1 : Microsoft.Xna.Framework.Game
         ResourceManager.Instance.LoadTexture("P_attack_3", Content.Load<Texture2D>("Player_attack/P_attack_3"));
         ResourceManager.Instance.LoadTexture("P_attack_4", Content.Load<Texture2D>("Player_attack/P_attack_4"));
 
+        // Textures - Ally Idle (4 frames)
+        ResourceManager.Instance.LoadTexture("A_idle_0", Content.Load<Texture2D>("Ally_idle/Slime_Friend_Idle-1"));
+        ResourceManager.Instance.LoadTexture("A_idle_1", Content.Load<Texture2D>("Ally_idle/Slime_Friend_Idle-2"));
+        ResourceManager.Instance.LoadTexture("A_idle_2", Content.Load<Texture2D>("Ally_idle/Slime_Friend_Idle-3"));
+        ResourceManager.Instance.LoadTexture("A_idle_3", Content.Load<Texture2D>("Ally_idle/Slime_Friend_Idle-4"));
+
+        // Textures - Ally Attack (5 frames)
+        ResourceManager.Instance.LoadTexture("A_attack_1", Content.Load<Texture2D>("Ally_Attack/Slime_Friend_Attack-1"));
+        ResourceManager.Instance.LoadTexture("A_attack_2", Content.Load<Texture2D>("Ally_Attack/Slime_Friend_Attack-2"));
+        ResourceManager.Instance.LoadTexture("A_attack_3", Content.Load<Texture2D>("Ally_Attack/Slime_Friend_Attack-3"));
+        ResourceManager.Instance.LoadTexture("A_attack_4", Content.Load<Texture2D>("Ally_Attack/Slime_Friend_Attack-4"));
+        ResourceManager.Instance.LoadTexture("A_attack_5", Content.Load<Texture2D>("Ally_Attack/Slime_Friend_Attack-5"));
         // Textures - Fireball Attack (2 frames)
         ResourceManager.Instance.LoadTexture("Fireball/attack/Ranged_Attack-1", Content.Load<Texture2D>("Fireball/attack/Ranged_Attack-1"));
         ResourceManager.Instance.LoadTexture("Fireball/attack/Ranged_Attack-2", Content.Load<Texture2D>("Fireball/attack/Ranged_Attack-2"));

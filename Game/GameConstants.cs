@@ -28,6 +28,6 @@ using Microsoft.Xna.Framework;
         public const float PROJECTILE_COLLIDER_RADIUS = 20f; // รัศมี collision
 
       // Ally Space
-        public const float FORWARD_SPACING = 40f;  
+        public const float FORWARD_SPACING = 50f;  
         public const float SIDE_SPACING = 15f;    
   }
