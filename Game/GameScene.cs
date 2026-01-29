@@ -19,11 +19,9 @@ public class GameScene : Scene
     private List<GameObject> _objectsToAdd = new List<GameObject>();
     private List<GameObject> _targets = new List<GameObject>();  // สำหรับ test collision
 
-    // test ally 
-    private bool _isPlacingAlly = false;
+    // Map and wave management
     private MapManager _mapManager;
     private WaveManager _waveManager;
-    private KeyboardState _prevKeyboard;
     private MouseState _prevMouse;
 
     public static Castle Castle;
@@ -63,6 +61,15 @@ public class GameScene : Scene
         // Initialize UI
         _gameUI = new GameSceneUI(this, _xpManager, _player);
         _gameUI.Initialize();
+        
+        // Subscribe to skill manager events for ally placement
+        SkillManager.Instance.OnAllyPlaceRequested += OnAllyPlaceRequested;
+    }
+    
+    private void OnAllyPlaceRequested()
+    {
+        // Try to place ally when in placement mode and mouse is clicked
+        // This will be called by CheckPlaceAlly when left click happens
     }
 
     private void CreateAlly(LaneData lane)
@@ -225,43 +232,29 @@ public class GameScene : Scene
 
     private void CheckPlaceAlly()
     {
-
-        var keyboard = Keyboard.GetState();
         var mouse = Mouse.GetState();
 
-        // กด Q ครั้งเดียว → เข้าโหมดวาง Ally
-        // if (keyboard.IsKeyDown(Keys.Q) && _prevKeyboard.IsKeyUp(Keys.Q))
-        // {
-        //     _isPlacingAlly = true;
-        // }
-
-        // คลิกซ้ายครั้งเดียว → วาง Ally
-        if (_isPlacingAlly &&
+        // คลิกซ้ายครั้งเดียว → try to place Ally (only if in placement mode)
+        if (SkillManager.Instance.IsInPlacementMode &&
             mouse.LeftButton == ButtonState.Pressed &&
             _prevMouse.LeftButton == ButtonState.Released)
         {
             Vector2 mousePos = new Vector2(mouse.X, mouse.Y);
             LaneData lane = GetLaneFromMouse(mousePos);
 
-            if (lane != null)
+            if (lane != null && lane.CanAddAlly())
             {
                 CreateAlly(lane);
-                _isPlacingAlly = false;
+                // Notify skill manager that ally was placed successfully
+                SkillManager.Instance.OnAllyPlacedSuccessfully();
+            }
+            else
+            {
+                System.Console.WriteLine("Cannot place ally here!");
             }
         }
 
-        if (_isPlacingAlly)
-        {
-            var lane = GetLaneFromMouse(
-                new Vector2(Mouse.GetState().X, Mouse.GetState().Y)
-            );
-
-            // if (lane != null)
-            //     System.Diagnostics.Debug.WriteLine($"HOVER LANE {lane.Index}");
-        }
-
         // เก็บ state ก่อนหน้า
-        _prevKeyboard = keyboard;
         _prevMouse = mouse;
     }
 

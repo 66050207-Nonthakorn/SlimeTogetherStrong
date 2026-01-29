@@ -94,7 +94,7 @@ public abstract class Enemy : GameObject {
     {
         var healthBar = _enemyClass.AddComponent<HealthBar>();
         healthBar.Size = new Vector2(50, 6);
-        healthBar.Offset = new Vector2(0, -40);
+        healthBar.Offset = new Vector2(0, -30);
         healthBar.FillColor = Color.Red;
         healthBar.BackgroundColor = new Color(60, 60, 60);
         healthBar.BorderColor = Color.Black;

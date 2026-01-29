@@ -60,6 +60,14 @@ public class Ally : GameObject
         {
             _animator.Play("attack");
         };
+
+        // Add health bar with green color
+        var healthBar = AddComponent<HealthBar>();
+        healthBar.FillColor = Color.Green;
+        healthBar.BackgroundColor = new Color(20, 40, 20);
+        healthBar.BorderColor = Color.DarkGreen;
+        healthBar.Size = new Vector2(50, 6);
+        healthBar.Offset = new Vector2(10, -20);
     }
 
     public void SetScene(GameScene scene)

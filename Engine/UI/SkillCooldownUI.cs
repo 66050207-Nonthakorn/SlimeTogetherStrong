@@ -93,6 +93,23 @@ public class SkillCooldownUI : UIElement
         cooldownText.Origin = Vector2.Zero; // Will be set dynamically
         
         AddChild(_cooldownTextObject);
+        
+        // Subscribe to placement mode changes
+        _skillManager.OnPlacementModeChanged += OnPlacementModeChanged;
+    }
+    
+    private void OnPlacementModeChanged(bool isInPlacementMode)
+    {
+        // Highlight icon when in placement mode
+        if (_iconObject != null)
+        {
+            var renderer = _iconObject.GetComponent<SpriteRenderer>();
+            if (renderer != null)
+            {
+                // Tint the icon yellow when in placement mode
+                renderer.Tint = isInPlacementMode ? Color.Yellow : Color.White;
+            }
+        }
     }
 
     public override void Update(GameTime gameTime)
