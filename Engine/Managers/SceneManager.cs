@@ -19,6 +19,12 @@ public class SceneManager
     public int ScreenWidth { get; set; }
     public int ScreenHeight { get; set; }
 
+    // Check if any overlay is currently active (level up, pause, game over, etc.)
+    public bool HasActiveOverlay => _overlayScenes.Count > 0;
+
+    // Flag that's true for one frame after an overlay closes
+    public bool OverlayJustClosed { get; private set; } = false;
+
     private SceneManager() { }
 
     public void LoadScene(string sceneName)
@@ -115,6 +121,9 @@ public class SceneManager
             _currentScene.Update(gameTime);
         }
 
+        // Clear the flag after scenes have had a chance to see it
+        OverlayJustClosed = false;
+
         // Process pending operations after update completes
         if (_pendingOverlayPush != null)
         {
@@ -126,6 +135,7 @@ public class SceneManager
         {
             PopOverlayImmediate();
             _pendingOverlayPop = false;
+            OverlayJustClosed = true;
         }
 
         if (_pendingSceneName != null)

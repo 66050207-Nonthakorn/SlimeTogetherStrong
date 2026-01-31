@@ -9,8 +9,8 @@ namespace SlimeTogetherStrong.Game;
 public class Ninja : Enemy
 {
     // Enemy stat config
-    protected const float MoveSpeed = 90f;
-    protected const int MaxHP = 30;
+    protected const float MoveSpeed = 60f;
+    protected const int MaxHP = 25;
     protected const int Damage = 8;
     protected const float AttackSpeed = 2f;      // attacks per second
     protected const float AttackRange = 40f;     // pixels
@@ -25,6 +25,7 @@ public class Ninja : Enemy
         _attackSpeed = AttackSpeed;
         _attackRange = AttackRange;
         _colliderRadius = ColliderRadius;
+        _xpReward = 10; // Fast but weak
 
         SetupRenderer();
         SetupAnimations();

@@ -71,5 +71,20 @@ public class XPBarRenderer : Component
                 _fillColor
             );
         }
+
+        // Draw text showing level and XP
+        var font = ResourceManager.Instance.GetFont("DefaultFont");
+        if (font != null && XPManager != null)
+        {
+            string levelText = $"Lv. {XPManager.CurrentLevel}";
+            string xpText = $"XP: {XPManager.CurrentXP}/{XPManager.XPForNextLevel}";
+
+            // Draw level on left side
+            spriteBatch.DrawString(font, levelText, pos + new Vector2(5, -2), Color.White);
+
+            // Draw XP on right side
+            Vector2 xpSize = font.MeasureString(xpText);
+            spriteBatch.DrawString(font, xpText, pos + new Vector2(Size.X - xpSize.X - 5, -2), Color.White);
+        }
     }
 }

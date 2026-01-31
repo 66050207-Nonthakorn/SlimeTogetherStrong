@@ -17,59 +17,52 @@ public class GameScene : Scene
     private Player _player;
     private List<GameObject> _objectsToRemove = new List<GameObject>();
     private List<GameObject> _objectsToAdd = new List<GameObject>();
-    private List<GameObject> _targets = new List<GameObject>();  // สำหรับ test collision
+    private List<GameObject> _targets = new List<GameObject>();
 
-    // Map and wave management
     private MapManager _mapManager;
     private WaveManager _waveManager;
     private MouseState _prevMouse;
 
     public static Castle Castle;
 
-    // XP System
     private XPManager _xpManager;
-    
-    // UI Management
+
+    private UpgradeManager _upgradeManager;
+    private List<UpgradeData> _currentUpgradeOptions;
+
     private GameSceneUI _gameUI;
 
-    // Static reference to get player (for skill system)
     private static Player _staticPlayerRef;
     public static Player GetPlayer() => _staticPlayerRef;
-    
-    // Game over flag
+
     private bool _gameOver = false;
-
-
 
     public GameScene()
     {
-        // Initialize XP Manager for this game session
         _xpManager = new XPManager();
-        
-        // Subscribe to level up event
+
+        _upgradeManager = new UpgradeManager();
+
         _xpManager.OnLevelUp += OnLevelUp;
-        
+
         _mapManager = new MapManager();
-        _waveManager = new WaveManager(); // _mapManager, this
+        _waveManager = new WaveManager();
         _waveManager.SetScene(this);
+        _waveManager.SetXPManager(_xpManager);
 
         CreateCastle();
         CreatePlayer();
-        
-        _waveManager.StartWave();  // Start the first wave
-        
-        // Initialize UI
+
+        _waveManager.StartWave();
+
         _gameUI = new GameSceneUI(this, _xpManager, _player);
         _gameUI.Initialize();
-        
-        // Subscribe to skill manager events for ally placement
+
         SkillManager.Instance.OnAllyPlaceRequested += OnAllyPlaceRequested;
     }
-    
+
     private void OnAllyPlaceRequested()
     {
-        // Try to place ally when in placement mode and mouse is clicked
-        // This will be called by CheckPlaceAlly when left click happens
     }
 
     private void CreateAlly(LaneData lane)
@@ -78,21 +71,25 @@ public class GameScene : Scene
         {
             Ally ally = new Ally();
             ally.SetScene(this);
+            ally.ApplyBonusStats(
+                UpgradeManager.Instance?.BonusAllyMaxHP ?? 0,
+                UpgradeManager.Instance?.BonusAllyDamage ?? 0
+            );
             lane.AddAlly(ally);
             _objectsToAdd.Add(ally);
-        }    
+        }
     }
 
     private LaneData GetLaneFromMouse(Vector2 mousePos)
     {
         LaneData closestLane = null;
-        float minDistance = 35f; // ความกว้างถนน / tolerance
+        float minDistance = 80f;
 
         foreach (LaneData lane in _mapManager.Lanes)
         {
             Vector2 laneVec = lane.StartPoint - lane.EndPoint;
             float laneLength = laneVec.Length();
-            Vector2 laneDir = lane.Direction; // ต้องชี้จาก End → Start
+            Vector2 laneDir = lane.Direction;
 
             Vector2 toMouse = mousePos - lane.EndPoint;
             float proj = Vector2.Dot(toMouse, laneDir);
@@ -126,60 +123,49 @@ public class GameScene : Scene
     {
         _player = new Player();
         _player.SetScene(this);
-        _staticPlayerRef = _player; // Set static reference
+        _staticPlayerRef = _player;
         AddGameObject(_player);
     }
 
-    // Player spawn bullet
     public void SpawnProjectile(Vector2 position, Vector2 direction)
     {
         var projectile = new Projectile(position, direction);
-        _objectsToAdd.Add(projectile);                                                                                                                                  
-
+        projectile.Damage += UpgradeManager.Instance?.BonusPlayerDamage ?? 0;
+        _objectsToAdd.Add(projectile);
     }
-
-    // Override Update เพื่อ cleanup inactive objects                                                                                                                                                   
 
     public override void Update(GameTime gameTime)
     {
-        // Don't update if game is over
         if (_gameOver)
             return;
-            
-        // Check for ESC key to open pause menu
-        if (InputManager.Instance.IsKeyPressed(Keys.Escape))
+                    if (InputManager.Instance.IsKeyPressed(Keys.Escape))
         {
             SceneManager.Instance.PushOverlay(new PauseScene());
-            return; // Don't process rest of update when opening pause menu
+            return;
         }
 
-        // Debug: Press X to add XP
         if (InputManager.Instance.IsKeyPressed(Keys.X))
         {
             _xpManager.AddXP(10);
         }
-        
-        // Debug: Press F1 to trigger win screen
+
         if (InputManager.Instance.IsKeyPressed(Keys.F1))
         {
             ShowGameOver(true);
             return;
         }
-        
-        // Debug: Press F2 to trigger lose screen
+
         if (InputManager.Instance.IsKeyPressed(Keys.F2))
         {
             ShowGameOver(false);
             return;
         }
 
-        // Debug: Press L to test level up overlay
         if (InputManager.Instance.IsKeyPressed(Keys.L))
         {
-            ShowLevelUpOverlay();
+            ShowLevelUpOverlay(_xpManager.CurrentLevel + 1);
         }
-        
-        // Check lose condition: Castle HP <= 0
+
         if (Castle != null)
         {
             var castleHealth = Castle.GetComponent<HealthComponent>();
@@ -190,30 +176,29 @@ public class GameScene : Scene
             }
         }
 
-        // Update skill manager
+        if (_waveManager.AllWavesComplete())
+        {
+            ShowGameOver(true);
+            return;
+        }
+
         SkillManager.Instance.Update(gameTime);
 
-        // Update wave manager
         _waveManager.Update(gameTime);
-        
-        // _mapManager.Update(gameTime);
+
 
         base.Update(gameTime);
 
-        // เพิ่ม objects ใหม่
         foreach (var obj in _objectsToAdd)
         {
             AddGameObject(obj);
         }
         _objectsToAdd.Clear();
 
-        //  Projectile vs Target
         CheckProjectileCollisions();
 
-        // Place Ally
         CheckPlaceAlly();
 
-        // ลบ objects ที่ไม่ active
         _objectsToRemove.Clear();
         foreach (var obj in GameObjects)
         {
@@ -226,7 +211,7 @@ public class GameScene : Scene
         foreach (var obj in _objectsToRemove)
         {
             RemoveGameObject(obj);
-            _targets.Remove(obj);  // ลบออกจาก targets list ด้วย
+            _targets.Remove(obj);
         }
     }
 
@@ -234,7 +219,6 @@ public class GameScene : Scene
     {
         var mouse = Mouse.GetState();
 
-        // คลิกซ้ายครั้งเดียว → try to place Ally (only if in placement mode)
         if (SkillManager.Instance.IsInPlacementMode &&
             mouse.LeftButton == ButtonState.Pressed &&
             _prevMouse.LeftButton == ButtonState.Released)
@@ -245,16 +229,10 @@ public class GameScene : Scene
             if (lane != null && lane.CanAddAlly())
             {
                 CreateAlly(lane);
-                // Notify skill manager that ally was placed successfully
                 SkillManager.Instance.OnAllyPlacedSuccessfully();
-            }
-            else
-            {
-                System.Console.WriteLine("Cannot place ally here!");
             }
         }
 
-        // เก็บ state ก่อนหน้า
         _prevMouse = mouse;
     }
 
@@ -270,7 +248,6 @@ public class GameScene : Scene
             var projectileCollider = projectile.GetComponent<CircleCollider>();
             if (projectileCollider == null) continue;
 
-            // Check collision against all enemies, not just _targets
             foreach (var target in GameObjects)
             {
                 if (target.Tag != "Enemy" || !target.Active) continue;
@@ -278,97 +255,127 @@ public class GameScene : Scene
                 var targetCollider = target.GetComponent<CircleCollider>();
                 if (targetCollider == null) continue;
 
-                // ใช้ CircleCollider.IsIntersect แทน manual distance check
                 if (projectileCollider.IsIntersect(targetCollider))
                 {
-                    // ชนแล้ว! Deal damage
                     var health = target.GetComponent<HealthComponent>();
                     health?.TakeDamage(projectile.Damage);
 
-                    // สร้าง explosion effect ที่ตำแหน่งที่ชน
                     var explosion = new Explosion(projectile.Position);
                     _objectsToAdd.Add(explosion);
 
-                    // ทำลาย projectile
                     projectile.Active = false;
-                    break;  // projectile ชนได้แค่ 1 target
+                    break;
                 }
             }
         }
     }
 
-    private void ShowLevelUpOverlay()
+    private void ShowLevelUpOverlay(int newLevel)
     {
-        // Create sample upgrade options
-        var upgradeOptions = new List<UpgradeOption>
-        {
-            new UpgradeOption
-            {
-                EntityTexture = ResourceManager.Instance.GetTexture("P_idle_0"),
-                StatsIconTexture = ResourceManager.Instance.GetTexture("Health_Icon"),
-                EntityName = "Player",
-                StatsName = "Health",
-                StatsIncrease = 50
-            },
-            new UpgradeOption
-            {
-                EntityTexture = ResourceManager.Instance.GetTexture("castle"),
-                StatsIconTexture = ResourceManager.Instance.GetTexture("Health_Icon"),
-                EntityName = "Castle",
-                StatsName = "Defense",
-                StatsIncrease = 25
-            },
-            new UpgradeOption
-            {
-                EntityTexture = ResourceManager.Instance.GetTexture("P_idle_0"),
-                StatsIconTexture = ResourceManager.Instance.GetTexture("Mana_Icon"),
-                EntityName = "Player",
-                StatsName = "Mana",
-                StatsIncrease = 30
-            }
-        };
+        _currentUpgradeOptions = _upgradeManager.GetRandomUpgrades(3);
 
-        // Show overlay with callback
-        var levelUpScene = new LevelUpOverlayScene(upgradeOptions, OnUpgradeSelected);
+        var upgradeOptions = new List<UpgradeOption>();
+        foreach (var upgrade in _currentUpgradeOptions)
+        {
+            upgradeOptions.Add(new UpgradeOption
+            {
+                EntityTexture = ResourceManager.Instance.GetTexture(upgrade.EntityTextureKey),
+                StatsIconTexture = ResourceManager.Instance.GetTexture(upgrade.StatsIconKey),
+                EntityName = upgrade.EntityName,
+                StatsName = upgrade.StatsName,
+                StatsIncrease = upgrade.Value
+            });
+        }
+
+        int clearedWave = Math.Max(1, _waveManager.CurrentWave - 1);
+
+        var levelUpScene = new LevelUpOverlayScene(upgradeOptions, OnUpgradeSelected, clearedWave, newLevel);
         SceneManager.Instance.PushOverlay(levelUpScene);
     }
 
     private void OnLevelUp(int newLevel)
     {
-        System.Console.WriteLine($"Level up! Now level {newLevel}");
-        ShowLevelUpOverlay();
+        ShowLevelUpOverlay(newLevel);
     }
 
     private void OnUpgradeSelected(int cardIndex)
     {
-        System.Console.WriteLine($"Selected upgrade card {cardIndex}");
-        // Handle the upgrade logic here based on cardIndex
-        // For example:
-        // if (cardIndex == 0) { /* Upgrade player health */ }
-        // if (cardIndex == 1) { /* Upgrade castle defense */ }
-        // if (cardIndex == 2) { /* Upgrade player mana */ }
+        if (_currentUpgradeOptions == null || cardIndex >= _currentUpgradeOptions.Count)
+            return;
+
+        var selectedUpgrade = _currentUpgradeOptions[cardIndex];
+
+        _upgradeManager.ApplyUpgrade(selectedUpgrade);
+
+        ApplyUpgradeEffect(selectedUpgrade);
     }
-    
+
+    private void ApplyUpgradeEffect(UpgradeData upgrade)
+    {
+        switch (upgrade.Type)
+        {
+            case UpgradeType.CastleMaxHP:
+                var castleHealth = Castle?.GetComponent<HealthComponent>();
+                if (castleHealth != null)
+                {
+                    castleHealth.MaxHP += upgrade.Value;
+                    castleHealth.Heal(upgrade.Value);
+                }
+                break;
+
+            case UpgradeType.CastleHeal:
+                var castleHeal = Castle?.GetComponent<HealthComponent>();
+                castleHeal?.Heal(upgrade.Value);
+                break;
+
+            case UpgradeType.PlayerMaxMana:
+                if (_player?.ManaComponent != null)
+                {
+                    _player.ManaComponent.MaxMana += upgrade.Value;
+                    _player.ManaComponent.RegenerateMana(upgrade.Value);
+                }
+                break;
+
+            case UpgradeType.PlayerManaRegen:
+                if (_player?.ManaComponent != null)
+                {
+                    _player.ManaComponent.ManaRegenRate += upgrade.Value;
+                }
+                break;
+
+            case UpgradeType.PlayerDamage:
+                break;
+
+            case UpgradeType.PlayerAttackSpeed:
+                if (_player != null)
+                {
+                    _player.ShootCooldown *= (1f - upgrade.Value / 100f);
+                }
+                break;
+
+            case UpgradeType.AllyMaxHP:
+            case UpgradeType.AllyDamage:
+                break;
+        }
+    }
+
     private void ShowGameOver(bool isWin)
     {
         if (_gameOver)
             return;
-            
+
         _gameOver = true;
-        
-        // Get play time from timer UI
+
         string playTime = "00:00";
         if (_gameUI != null && _gameUI.TimerUI != null)
         {
             playTime = _gameUI.TimerUI.GetFormattedTime();
         }
-        
-        // Show game over overlay (similar to level up overlay)
+
         var gameOverScene = new GameOverScene(isWin, playTime);
         SceneManager.Instance.PushOverlay(gameOverScene);
     }
 
-    // debug rings
     public void DrawDebugRings(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
     {
         if (_pixelTexture == null)
@@ -406,5 +413,47 @@ public class GameScene : Scene
         float length = edge.Length();
 
         spriteBatch.Draw(_pixelTexture, start, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0);
+    }
+
+    public void DrawPlacementHighlights(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+    {
+        if (!SkillManager.Instance.IsInPlacementMode)
+            return;
+
+        if (_pixelTexture == null)
+        {
+            _pixelTexture = new Texture2D(graphicsDevice, 1, 1);
+            _pixelTexture.SetData(new[] { Color.White });
+        }
+
+        foreach (var lane in _mapManager.Lanes)
+        {
+            if (!lane.CanAddAlly())
+                continue;
+
+            int nextSlotIndex = lane.Allies.Count;
+            float forwardOffset = GameConstants.BLUE_RADIUS + nextSlotIndex * GameConstants.FORWARD_SPACING;
+            float sideOffset = (nextSlotIndex % 2 == 0 ? -1 : 1) * GameConstants.SIDE_SPACING;
+
+            Vector2 highlightPos = lane.EndPoint
+                + lane.Direction * forwardOffset
+                + lane.Perpendicular * sideOffset;
+
+            DrawFilledCircle(spriteBatch, highlightPos, 25f, Color.LimeGreen * 0.6f);
+            DrawCircle(spriteBatch, highlightPos, 25f, Color.Green, 2);
+        }
+    }
+
+    private void DrawFilledCircle(SpriteBatch spriteBatch, Vector2 center, float radius, Color color)
+    {
+        for (int y = -(int)radius; y <= (int)radius; y++)
+        {
+            float halfWidth = MathF.Sqrt(radius * radius - y * y);
+            spriteBatch.Draw(
+                _pixelTexture,
+                new Rectangle((int)(center.X - halfWidth), (int)(center.Y + y), (int)(halfWidth * 2), 1),
+                color
+            );
+        }
     }
 }

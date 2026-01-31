@@ -29,14 +29,10 @@ public class Castle : GameObject
         health.MaxHP = 1000;
         health.Initialize();
 
-        health.OnDamage += (damage) =>
-        {
-            System.Diagnostics.Debug.WriteLine($"Castle HP: {health.CurrentHP}/{health.MaxHP}");
-        };
+        health.OnDamage += (damage) => { };
 
         health.OnDeath += () =>
         {
-            System.Diagnostics.Debug.WriteLine($"Castle has been destroyed, game over!");
             Active = false;
         };
     }

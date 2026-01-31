@@ -41,13 +41,6 @@ public class Projectile : GameObject
 
         var frame1 = ResourceManager.Instance.GetTexture("Fireball/attack/Ranged_Attack-1");
         var frame2 = ResourceManager.Instance.GetTexture("Fireball/attack/Ranged_Attack-2");
-
-        // Debug: ตรวจสอบว่าโหลด texture ได้หรือเปล่า
-        if (frame1 == null || frame2 == null)
-        {
-            System.Diagnostics.Debug.WriteLine($"Fireball texture not found! frame1={frame1}, frame2={frame2}");
-        }
-
         var attackFrames = new List<Texture2D> { frame1, frame2 };
 
         var attackAnimation = new Animation(attackFrames, 0.1f);

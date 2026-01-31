@@ -93,21 +93,25 @@ public class GameSceneUI
             Color.DarkRed,       // Background color
             Color.White,         // Outline color
             5,                   // Outline thickness
-            () => GameScene.Castle?.GetComponent<SlimeTogetherStrong.Engine.Components.HealthComponent>()?.GetHealthPercentage() ?? 0f
+            () => GameScene.Castle?.GetComponent<SlimeTogetherStrong.Engine.Components.HealthComponent>()?.GetHealthPercentage() ?? 0f,
+            () => {
+                var hp = GameScene.Castle?.GetComponent<SlimeTogetherStrong.Engine.Components.HealthComponent>();
+                if (hp == null) return "0";
+                int percent = (int)System.Math.Clamp(hp.GetHealthPercentage() * 100f, 0f, 100f);
+                return $"{percent}";
+            }
         );
         _scene.AddGameObject(_castleHealthBar);
     }
 
     private void CreatePlayerManaBar()
     {
-        // Create player mana bar at bottom right (left of HP bar)
         float iconSize = 40f;
         float barWidth = 30f;
         float barHeight = 150f;
         float padding = 20f;
-        float spacing = 10f; // Space between mana and health bar icons
+        float spacing = 10f; 
         
-        // Position icon from bottom right, left of HP bar (bar will auto-center under icon)
         Vector2 position = new Vector2(
             SceneManager.Instance.ScreenWidth - (iconSize * 2) - padding - spacing,
             SceneManager.Instance.ScreenHeight - barHeight - iconSize - padding - 5f // -5f for gap
@@ -120,16 +124,21 @@ public class GameSceneUI
             new Vector2(iconSize, iconSize),
             new Vector2(barWidth, barHeight),
             manaIcon,
-            Color.RoyalBlue,          // Fill color
-            Color.MidnightBlue,      // Background color
-            Color.White,         // Outline color
-            5,                   // Outline thickness
-            () => _player?.ManaComponent?.GetManaPercentage() ?? 0f
+            Color.RoyalBlue,          
+            Color.MidnightBlue,      
+            Color.White,         
+            5,                  
+            () => _player?.ManaComponent?.GetManaPercentage() ?? 0f,
+            () => {
+                var mana = _player?.ManaComponent;
+                if (mana == null) return "0";
+                int percent = (int)System.Math.Clamp(mana.GetManaPercentage() * 100f, 0f, 100f);
+                return $"{percent}";
+            }
         );
         _scene.AddGameObject(_playerManaBar);
     }
 
-    // Public accessors if needed
     public XPBar XPBar => _xpBar;
     public TimerUI TimerUI => _timerUI;
     public SkillCooldownUI SkillCooldownUI => _skillCooldownUI;

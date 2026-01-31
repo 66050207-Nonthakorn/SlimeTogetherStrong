@@ -25,6 +25,7 @@ public class Warrior : Enemy
         _attackSpeed = AttackSpeed;
         _attackRange = AttackRange;
         _colliderRadius = ColliderRadius;
+        _xpReward = 15; // Balanced enemy
 
         SetupRenderer();
         SetupAnimations();

@@ -9,16 +9,12 @@ public class LaneData
 
     public int Index;
 
-    // จุดเริ่มเลน (spawn enemy / ปลายถนน)
     public Vector2 StartPoint;
 
-    // จุดปลายเลน (Castle)
     public Vector2 EndPoint;
 
-    // ทิศทางของเลน (enemy เดินตาม)
     public Vector2 Direction;
 
-    // เวกเตอร์ตั้งฉาก ใช้จัดฟันปลา
     public Vector2 Perpendicular;
 
     public List<Ally> Allies;
@@ -35,7 +31,6 @@ public class LaneData
 
         Direction = Vector2.Normalize(StartPoint - EndPoint);
 
-        // หมุน 90 องศา
         Perpendicular = new Vector2(-Direction.Y, Direction.X);
 
         Vector2 fromCastle = StartPoint - EndPoint;

@@ -9,8 +9,8 @@ namespace SlimeTogetherStrong.Game;
 public class Tank : Enemy
 {
     // Enemy stat config
-    protected const float MoveSpeed = 40f;
-    protected const int MaxHP = 80;
+    protected const float MoveSpeed = 25f;
+    protected const int MaxHP = 60;
     protected const int Damage = 7;
     protected const float AttackSpeed = 0.8f;      // attacks per second
     protected const float AttackRange = 40f;     // pixels
@@ -25,6 +25,7 @@ public class Tank : Enemy
         _attackSpeed = AttackSpeed;
         _attackRange = AttackRange;
         _colliderRadius = ColliderRadius;
+        _xpReward = 25; // High HP, hard to kill
 
         SetupRenderer();
         SetupAnimations();

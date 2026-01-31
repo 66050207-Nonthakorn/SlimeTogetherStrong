@@ -50,11 +50,12 @@ public class Ally : GameObject
 
         health.OnDeath += () =>
         {
-            System.Diagnostics.Debug.WriteLine($"Ally killed.");
             Active = false;
         };
 
         var combat = AddComponent<CombatComponent>();
+        combat.Damage = 15;
+        combat.AttackSpeed = 1.5f;
 
         combat.OnAttack += (target) =>
         {
@@ -73,6 +74,22 @@ public class Ally : GameObject
     public void SetScene(GameScene scene)
     {
         _scene = scene;
+    }
+
+    public void ApplyBonusStats(int bonusHP, int bonusDamage)
+    {
+        var health = GetComponent<HealthComponent>();
+        if (health != null)
+        {
+            health.MaxHP += bonusHP;
+            health.Heal(bonusHP);
+        }
+
+        var combat = GetComponent<CombatComponent>();
+        if (combat != null)
+        {
+            combat.Damage += bonusDamage;
+        }
     }
 
     private void SetupRenderer()

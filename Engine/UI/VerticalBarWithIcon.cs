@@ -10,9 +10,9 @@ public class VerticalBarWithIcon : UIElement
 {
     private GameObject _iconObject;
     private GameObject _barBackgroundObject;
-    
+
     private Texture2D _iconTexture;
-    
+
     private Vector2 _basePosition;
     private Vector2 _iconSize;
     private Vector2 _barSize;
@@ -20,19 +20,21 @@ public class VerticalBarWithIcon : UIElement
     private Color _backgroundColor;
     private Color _outlineColor;
     private int _outlineThickness;
-    
+
     private Func<float> _valueGetter;
+    private Func<string> _textGetter; // For displaying text like "500/1000"
 
     public VerticalBarWithIcon(
-        Vector2 position, 
-        Vector2 iconSize, 
+        Vector2 position,
+        Vector2 iconSize,
         Vector2 barSize,
         Texture2D iconTexture,
         Color fillColor,
         Color backgroundColor,
         Color outlineColor,
         int outlineThickness,
-        Func<float> valueGetter)
+        Func<float> valueGetter,
+        Func<string> textGetter = null)
     {
         _basePosition = position;
         _iconSize = iconSize;
@@ -43,7 +45,8 @@ public class VerticalBarWithIcon : UIElement
         _outlineColor = outlineColor;
         _outlineThickness = outlineThickness;
         _valueGetter = valueGetter;
-        
+        _textGetter = textGetter;
+
         Position = position;
     }
 
@@ -85,7 +88,8 @@ public class VerticalBarWithIcon : UIElement
         barRenderer.OutlineColor = _outlineColor;
         barRenderer.OutlineThickness = _outlineThickness;
         barRenderer.ValueGetter = _valueGetter;
-        
+        barRenderer.TextGetter = _textGetter;
+
         AddChild(_barBackgroundObject);
     }
 }
@@ -99,6 +103,7 @@ public class VerticalBarRenderer : Component
     public Color OutlineColor { get; set; }
     public int OutlineThickness { get; set; }
     public Func<float> ValueGetter { get; set; }
+    public Func<string> TextGetter { get; set; }
     
     private Texture2D _pixelTexture;
 
@@ -189,5 +194,19 @@ public class VerticalBarRenderer : Component
             ),
             OutlineColor
         );
+
+        // Draw text centered inside the bar
+        if (TextGetter != null)
+        {
+            var font = ResourceManager.Instance.GetFont("DefaultFont");
+            if (font != null)
+            {
+                string text = TextGetter();
+                Vector2 textSize = font.MeasureString(text);
+                float textX = pos.X + (Size.X - textSize.X) / 2; // Center horizontally
+                float textY = pos.Y + (Size.Y - textSize.Y) / 2; // Center vertically in bar
+                spriteBatch.DrawString(font, text, new Vector2(textX, textY), Color.White);
+            }
+        }
     }
 }

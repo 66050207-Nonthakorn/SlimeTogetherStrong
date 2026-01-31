@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Engine.Managers;
+using SlimeTogetherStrong.Engine.UI;
 using SlimeTogetherStrong.Game;
 
 namespace SlimeTogetherStrong;
@@ -9,6 +10,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private Texture2D _backgroundTexture;
 
 
     public Game1()
@@ -23,6 +25,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         _graphics.PreferredBackBufferWidth = 1000;
         _graphics.PreferredBackBufferHeight = 1000;
         _graphics.ApplyChanges();
+
+        Window.Title = "Slime Together Strong";
 
         // Set screen dimensions in SceneManager
         SceneManager.Instance.ScreenWidth = _graphics.PreferredBackBufferWidth;
@@ -46,10 +50,8 @@ public class Game1 : Microsoft.Xna.Framework.Game
         ResourceManager.Instance.LoadTexture("Mana_Icon", Content.Load<Texture2D>("UI/Mana_point_"));
 
         // Textures - Main
-        ResourceManager.Instance.LoadTexture("castle", Content.Load<Texture2D>("Main/castle"));
-        ResourceManager.Instance.LoadTexture("player_lane", Content.Load<Texture2D>("Main/player_lane"));
-        ResourceManager.Instance.LoadTexture("allies_lane", Content.Load<Texture2D>("Main/allies_lane"));
-        ResourceManager.Instance.LoadTexture("bullet", Content.Load<Texture2D>("Main/bullet"));
+        _backgroundTexture = Content.Load<Texture2D>("Main/Background");
+        ResourceManager.Instance.LoadTexture("lane_road", Content.Load<Texture2D>("Main/Allies_Street"));
 
         // Textures - Castle Idle (5 frames)
         ResourceManager.Instance.LoadTexture("Castle_idle_0", Content.Load<Texture2D>("Castle_idle/Base-1"));
@@ -146,6 +148,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
     protected override void Update(GameTime gameTime)
     {
         InputManager.Instance.Update();
+        Button.ResetClickFlag();
         SceneManager.Instance.Update(gameTime);
 
         base.Update(gameTime);
@@ -153,21 +156,55 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(new Color(0x90, 0xEE, 0x90));
+        GraphicsDevice.Clear(Color.Black);
 
         _spriteBatch.Begin();
 
-        // วาด debug rings (optional)
+        // วาด background
+        _spriteBatch.Draw(_backgroundTexture, Vector2.Zero, Color.White);
+
+        // วาด lane roads (6 เส้นถนน ทุกๆ 60°)
         var currentScene = SceneManager.Instance.GetCurrentScene();
         if (currentScene is SlimeTogetherStrong.Game.GameScene gameScene)
         {
-            gameScene.DrawDebugRings(_spriteBatch, GraphicsDevice);
+            DrawLaneRoads(_spriteBatch);
+            gameScene.DrawPlacementHighlights(_spriteBatch, GraphicsDevice);
         }
 
         SceneManager.Instance.Draw(_spriteBatch);
         _spriteBatch.End();
 
         base.Draw(gameTime);
+    }
+
+    private void DrawLaneRoads(SpriteBatch spriteBatch)
+    {
+        var laneTexture = ResourceManager.Instance.GetTexture("lane_road");
+        if (laneTexture == null) return;
+
+        int laneCount = 6;
+        float angleStep = MathHelper.TwoPi / laneCount;
+        Vector2 center = new Vector2(500, 500); // GameConstants.CENTER
+
+        for (int i = 0; i < laneCount; i++)
+        {
+            float angle = i * angleStep;
+
+            // Origin ที่ด้านล่างกลางของ texture (จุดที่ติดกับ center)
+            Vector2 origin = new Vector2(laneTexture.Width / 2f, laneTexture.Height);
+
+            spriteBatch.Draw(
+                laneTexture,
+                center,
+                null,
+                Color.White,
+                angle - MathHelper.PiOver2, // หมุนให้ชี้ออกจาก center
+                origin,
+                1f,
+                SpriteEffects.None,
+                0
+            );
+        }
     }
 
 }

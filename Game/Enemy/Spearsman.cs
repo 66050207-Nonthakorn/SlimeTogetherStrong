@@ -9,7 +9,7 @@ namespace SlimeTogetherStrong.Game;
 public class Spearsman : Enemy
 {
     // Enemy stat config
-    protected const float MoveSpeed = 40f;
+    protected const float MoveSpeed = 50f;
     protected const int MaxHP = 30;
     protected const int Damage = 15;
     protected const float AttackSpeed = 1f;      // attacks per second
@@ -25,6 +25,7 @@ public class Spearsman : Enemy
         _attackSpeed = AttackSpeed;
         _attackRange = AttackRange;
         _colliderRadius = ColliderRadius;
+        _xpReward = 15; // High damage, low HP
 
         SetupRenderer();
         SetupAnimations();

@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Components.Physics;
+using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Engine.UI;
 
 namespace SlimeTogetherStrong.Game;
@@ -15,6 +16,10 @@ public abstract class Enemy : GameObject {
     protected float _attackSpeed;
     protected float _attackRange;
     protected float _colliderRadius;
+    protected int _xpReward = 10;
+
+    // XP Manager reference
+    private XPManager _xpManager;
 
     // Enemy state management
     private EnemyState state = EnemyState.Moving;
@@ -68,8 +73,9 @@ public abstract class Enemy : GameObject {
 
         health.OnDeath += () =>
         {
-            System.Diagnostics.Debug.WriteLine($"Killed enemy");
             Active = false;
+
+            _xpManager?.AddXP(_xpReward);
 
             for (int i = 0; i < _parentLane.Enemies.Count; i++)
             {
@@ -106,6 +112,11 @@ public abstract class Enemy : GameObject {
         _scene = scene;
     }
 
+    public void SetXPManager(XPManager xpManager)
+    {
+        _xpManager = xpManager;
+    }
+
     public void SetParentLane(LaneData lane, int slotIndex)
     {
         _parentLane = lane;
@@ -118,15 +129,23 @@ public abstract class Enemy : GameObject {
     }
 
     private void FindTarget() {
-        // Check for Ally in range
         Ally nearestAlly = FindNearestAlly();
         if (nearestAlly != null && Vector2.Distance(Position, nearestAlly.Position) < 30f) {
             currentTarget = nearestAlly;
             state = EnemyState.Attacking;
             return;
         }
-        
-        // If no Ally, target Castle
+
+        Player player = GameScene.GetPlayer();
+        if (player != null) {
+            float distanceToPlayer = Vector2.Distance(Position, player.Position);
+            if (distanceToPlayer < 40f) {
+                currentTarget = player;
+                state = EnemyState.Attacking;
+                return;
+            }
+        }
+
         if (Vector2.Distance(Position, GameConstants.CENTER) < 80f) {
             currentTarget = GameScene.Castle;
             state = EnemyState.Attacking;
@@ -198,21 +217,49 @@ public abstract class Enemy : GameObject {
                 break;
                 
             case EnemyState.Attacking:
-                if (currentTarget == null ||
-                    currentTarget.GetComponent<HealthComponent>()?.IsDead() == true)
+                if (currentTarget == null)
                 {
                     state = EnemyState.Moving;
                     currentTarget = null;
+                    _isAttacking = false;
                     _animator.Play("walk");
                     break;
                 }
 
-                var combat = GetComponent<CombatComponent>();
-
-                if (combat.CanAttack())
+                if (currentTarget is Player targetPlayer)
                 {
-                    combat.Attack(currentTarget);
-                    StartAttack(); 
+                    float distanceToPlayer = Vector2.Distance(Position, targetPlayer.Position);
+                    if (distanceToPlayer > 50f)
+                    {
+                        state = EnemyState.Moving;
+                        currentTarget = null;
+                        _isAttacking = false;
+                        _animator.Play("walk");
+                        break;
+                    }
+                    var combat = GetComponent<CombatComponent>();
+                    if (combat.CanAttack())
+                    {
+                        StartAttack();
+                    }
+                }
+                else
+                {
+                    if (currentTarget.GetComponent<HealthComponent>()?.IsDead() == true)
+                    {
+                        state = EnemyState.Moving;
+                        currentTarget = null;
+                        _isAttacking = false;
+                        _animator.Play("walk");
+                        break;
+                    }
+
+                    var combat = GetComponent<CombatComponent>();
+                    if (combat.CanAttack())
+                    {
+                        combat.Attack(currentTarget);
+                        StartAttack();
+                    }
                 }
                 break;
         }

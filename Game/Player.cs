@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Managers;
+using SlimeTogetherStrong.Engine.UI;
 
 namespace SlimeTogetherStrong.Game;
 
@@ -21,6 +22,9 @@ public class Player : GameObject
     // Shooting
     public float ShootCooldown { get; set; } = 0.3f;
     private float _shootTimer = 0f;
+    private bool _leftShootAllowed = true;
+    private bool _rightShootAllowed = true;
+    private bool _wasBlocked = false;
 
     // Animation
     private Animator _animator;
@@ -42,6 +46,10 @@ public class Player : GameObject
     {
         Tag = "Player";
         Scale = new Vector2(0.2f, 0.2f);
+
+        var mouseState = Mouse.GetState();
+        _leftShootAllowed = mouseState.LeftButton == ButtonState.Released;
+        _rightShootAllowed = mouseState.RightButton == ButtonState.Released;
 
         UpdatePositionOnRing();
         SetupRenderer();
@@ -145,16 +153,62 @@ public class Player : GameObject
 
     private void HandleAttackInput()
     {
-        // Mouse left click = shoot (hold for auto-fire)
-        bool wantToShoot = Mouse.GetState().LeftButton == ButtonState.Pressed;
+        var mouseState = Mouse.GetState();
 
-        if (wantToShoot && _shootTimer <= 0)
+        bool isBlocked = SkillManager.Instance.IsInPlacementMode ||
+                         SceneManager.Instance.HasActiveOverlay ||
+                         Button.WasClickedThisFrame;
+
+        if (isBlocked)
         {
-            Shoot();
+            _wasBlocked = true;
+            _leftShootAllowed = false;
+            _rightShootAllowed = false;
+            return;
+        }
+
+        if (SceneManager.Instance.OverlayJustClosed)
+        {
+            _wasBlocked = true;
+            _leftShootAllowed = false;
+            _rightShootAllowed = false;
+        }
+
+        if (_wasBlocked)
+        {
+            if (mouseState.LeftButton == ButtonState.Released &&
+                mouseState.RightButton == ButtonState.Released)
+            {
+                _wasBlocked = false;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        if (mouseState.LeftButton == ButtonState.Released)
+            _leftShootAllowed = true;
+        if (mouseState.RightButton == ButtonState.Released)
+            _rightShootAllowed = true;
+
+        bool wantToShootOutward = mouseState.LeftButton == ButtonState.Pressed && _leftShootAllowed;
+        bool wantToShootInward = mouseState.RightButton == ButtonState.Pressed && _rightShootAllowed;
+
+        if (_shootTimer <= 0)
+        {
+            if (wantToShootOutward)
+            {
+                Shoot(shootInward: false);
+            }
+            else if (wantToShootInward)
+            {
+                Shoot(shootInward: true);
+            }
         }
     }
 
-    private void Shoot()
+    private void Shoot(bool shootInward)
     {
         _shootTimer = ShootCooldown;
 
@@ -163,8 +217,18 @@ public class Player : GameObject
         // Spawn projectile
         if (_scene != null)
         {
-            Vector2 directionOutward = Position - GameConstants.CENTER;
-            _scene.SpawnProjectile(Position, directionOutward);
+            Vector2 direction;
+            if (shootInward)
+            {
+                // Shoot towards center
+                direction = GameConstants.CENTER - Position;
+            }
+            else
+            {
+                // Shoot away from center
+                direction = Position - GameConstants.CENTER;
+            }
+            _scene.SpawnProjectile(Position, direction);
         }
     }
 
@@ -216,10 +280,6 @@ public class Player : GameObject
     }
 
     public bool IsAttacking => _isAttacking;
-
-    // Player กำลัง shoot cooldown อยู่หรือไม่
     public bool IsOnShootCooldown => _shootTimer > 0;
-
-    /// เวลา shoot cooldown ที่เหลือ (วินาที)
     public float GetRemainingShootCooldown() => Math.Max(0f, _shootTimer);
 }
