@@ -150,28 +150,6 @@ public class GameScene : Scene
             return;
         }
 
-        if (InputManager.Instance.IsKeyPressed(Keys.X))
-        {
-            _xpManager.AddXP(10);
-        }
-
-        if (InputManager.Instance.IsKeyPressed(Keys.F1))
-        {
-            ShowGameOver(true);
-            return;
-        }
-
-        if (InputManager.Instance.IsKeyPressed(Keys.F2))
-        {
-            ShowGameOver(false);
-            return;
-        }
-
-        if (InputManager.Instance.IsKeyPressed(Keys.L))
-        {
-            ShowLevelUpOverlay(_xpManager.CurrentLevel + 1);
-        }
-
         if (Castle != null)
         {
             var castleHealth = Castle.GetComponent<HealthComponent>();
@@ -383,19 +361,6 @@ public class GameScene : Scene
 
         var gameOverScene = new GameOverScene(isWin, playTime);
         SceneManager.Instance.PushOverlay(gameOverScene);
-    }
-
-    public void DrawDebugRings(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
-    {
-        if (_pixelTexture == null)
-        {
-            _pixelTexture = new Texture2D(graphicsDevice, 1, 1);
-            _pixelTexture.SetData(new[] { Color.White });
-        }
-
-        DrawCircle(spriteBatch, GameConstants.CENTER, GameConstants.ORANGE_RADIUS, Color.Orange * 0.5f, 2);
-        DrawCircle(spriteBatch, GameConstants.CENTER, GameConstants.BLUE_RADIUS, Color.Blue * 0.5f, 2);
-        DrawCircle(spriteBatch, GameConstants.CENTER, GameConstants.GREEN_RADIUS, Color.Green * 0.5f, 2);
     }
 
     private void DrawCircle(SpriteBatch spriteBatch, Vector2 center, float radius, Color color, int thickness)

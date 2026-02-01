@@ -153,42 +153,34 @@ public class UpgradeManager
         {
             case UpgradeType.CastleMaxHP:
                 BonusCastleMaxHP += upgrade.Value;
-                System.Console.WriteLine($"Castle Max HP +{upgrade.Value} (Total bonus: {BonusCastleMaxHP})");
                 break;
 
             case UpgradeType.CastleHeal:
                 // Heal is applied immediately, not stored
-                System.Console.WriteLine($"Castle healed for {upgrade.Value}");
                 break;
 
             case UpgradeType.PlayerMaxMana:
                 BonusPlayerMaxMana += upgrade.Value;
-                System.Console.WriteLine($"Player Max Mana +{upgrade.Value} (Total bonus: {BonusPlayerMaxMana})");
                 break;
 
             case UpgradeType.PlayerManaRegen:
                 BonusPlayerManaRegen += upgrade.Value;
-                System.Console.WriteLine($"Player Mana Regen +{upgrade.Value} (Total bonus: {BonusPlayerManaRegen})");
                 break;
 
             case UpgradeType.PlayerDamage:
                 BonusPlayerDamage += upgrade.Value;
-                System.Console.WriteLine($"Player Damage +{upgrade.Value} (Total bonus: {BonusPlayerDamage})");
                 break;
 
             case UpgradeType.PlayerAttackSpeed:
                 BonusPlayerAttackSpeed += upgrade.Value / 100f; // Convert to percentage
-                System.Console.WriteLine($"Player Attack Speed +{upgrade.Value}% (Total bonus: {BonusPlayerAttackSpeed * 100}%)");
                 break;
 
             case UpgradeType.AllyMaxHP:
                 BonusAllyMaxHP += upgrade.Value;
-                System.Console.WriteLine($"Ally Max HP +{upgrade.Value} (Total bonus: {BonusAllyMaxHP})");
                 break;
 
             case UpgradeType.AllyDamage:
                 BonusAllyDamage += upgrade.Value;
-                System.Console.WriteLine($"Ally Damage +{upgrade.Value} (Total bonus: {BonusAllyDamage})");
                 break;
         }
     }

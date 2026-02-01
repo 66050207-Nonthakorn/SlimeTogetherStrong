@@ -104,7 +104,3 @@ _*
 /native/**/*.make
 /native/**/Makefile
 /native/**/*.mgfxo.h
-
-plan.md
-progress.md
-gamedoc.md

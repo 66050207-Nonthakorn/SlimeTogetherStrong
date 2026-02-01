@@ -50,7 +50,6 @@ public class SkillManager
         // Can only toggle if skill is not on cooldown
         if (IsOnCooldown)
         {
-            System.Console.WriteLine($"Skill on cooldown: {_currentCooldown:F1}s remaining");
             return;
         }
 
@@ -58,7 +57,6 @@ public class SkillManager
         var player = SlimeTogetherStrong.Game.Scenes.GameScene.GetPlayer();
         if (player == null || player.ManaComponent == null)
         {
-            System.Console.WriteLine("Player or mana system not found!");
             return;
         }
 
@@ -67,20 +65,17 @@ public class SkillManager
             // Check mana before entering placement mode
             if (player.ManaComponent.CurrentMana < _skillManaCost)
             {
-                System.Console.WriteLine("Not enough mana!");
                 return;
             }
 
             // Enter placement mode
             _isInPlacementMode = true;
-            System.Console.WriteLine("Entered ally placement mode! Click to place or press Q to cancel.");
             OnPlacementModeChanged?.Invoke(true);
         }
         else
         {
             // Exit placement mode (cancel)
             _isInPlacementMode = false;
-            System.Console.WriteLine("Exited ally placement mode.");
             OnPlacementModeChanged?.Invoke(false);
         }
     }
@@ -97,7 +92,6 @@ public class SkillManager
         {
             if (player.ManaComponent.UseMana(_skillManaCost))
             {
-                System.Console.WriteLine($"Ally placed! Used {_skillManaCost} mana.");
                 _currentCooldown = _skillCooldownDuration;
                 _isInPlacementMode = false;
                 OnPlacementModeChanged?.Invoke(false);
