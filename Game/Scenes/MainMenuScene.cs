@@ -5,7 +5,7 @@ using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Engine.UI;
 
-namespace SlimeTogetherStrong.Game;
+namespace SlimeTogetherStrong.Game.Scenes;
 
 public class MainMenuScene : Scene
 {

@@ -7,8 +7,10 @@ using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Engine.UI;
+using SlimeTogetherStrong.Game.Constants;
+using SlimeTogetherStrong.Game.Scenes;
 
-namespace SlimeTogetherStrong.Game;
+namespace SlimeTogetherStrong.Game.Entities;
 
 public class Player : GameObject
 {

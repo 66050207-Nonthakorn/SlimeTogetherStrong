@@ -1,3 +1,5 @@
+namespace SlimeTogetherStrong.Game.Constants;
+
 public enum RingType
 {
     Orange_Player,

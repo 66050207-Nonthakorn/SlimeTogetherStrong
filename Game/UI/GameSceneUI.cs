@@ -3,8 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Engine.UI;
+using SlimeTogetherStrong.Game.Entities;
+using SlimeTogetherStrong.Game.Scenes;
 
-namespace SlimeTogetherStrong.Game;
+namespace SlimeTogetherStrong.Game.UI;
 
 public class GameSceneUI
 {

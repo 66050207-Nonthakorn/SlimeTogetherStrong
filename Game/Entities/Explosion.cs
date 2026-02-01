@@ -4,8 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Managers;
+using SlimeTogetherStrong.Game.Constants;
 
-namespace SlimeTogetherStrong.Game;
+namespace SlimeTogetherStrong.Game.Entities;
 
 public class Explosion : GameObject
 {

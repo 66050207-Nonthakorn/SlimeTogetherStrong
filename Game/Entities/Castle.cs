@@ -3,9 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Engine;
 using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Managers;
-using SlimeTogetherStrong.Game;
+using SlimeTogetherStrong.Game.Constants;
 using System;
 using System.Collections.Generic;
+
+namespace SlimeTogetherStrong.Game.Entities;
 
 public class Castle : GameObject
 {

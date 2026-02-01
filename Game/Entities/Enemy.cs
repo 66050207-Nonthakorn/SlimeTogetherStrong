@@ -4,8 +4,11 @@ using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Components.Physics;
 using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Engine.UI;
+using SlimeTogetherStrong.Game.Constants;
+using SlimeTogetherStrong.Game.Scenes;
+using SlimeTogetherStrong.Game.Systems;
 
-namespace SlimeTogetherStrong.Game;
+namespace SlimeTogetherStrong.Game.Entities;
 
 public abstract class Enemy : GameObject {
     // Configurable in derived enemy classes

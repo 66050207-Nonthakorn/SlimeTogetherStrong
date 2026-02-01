@@ -1,7 +1,9 @@
 using Microsoft.Xna.Framework;
-using SlimeTogetherStrong.Game;
+using SlimeTogetherStrong.Game.Entities;
 using System;
 using System.Collections.Generic;
+
+namespace SlimeTogetherStrong.Game.Systems;
 
 public class LaneData
 {

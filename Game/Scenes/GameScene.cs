@@ -8,8 +8,12 @@ using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Components.Physics;
 using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Engine.UI;
+using SlimeTogetherStrong.Game.Constants;
+using SlimeTogetherStrong.Game.Entities;
+using SlimeTogetherStrong.Game.Systems;
+using SlimeTogetherStrong.Game.UI;
 
-namespace SlimeTogetherStrong.Game;
+namespace SlimeTogetherStrong.Game.Scenes;
 
 public class GameScene : Scene
 {

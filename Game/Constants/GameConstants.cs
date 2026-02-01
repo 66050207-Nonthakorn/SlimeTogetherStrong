@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace SlimeTogetherStrong.Game;
+namespace SlimeTogetherStrong.Game.Constants;
 
 public static class GameConstants
 {

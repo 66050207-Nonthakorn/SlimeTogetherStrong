@@ -55,7 +55,7 @@ public class SkillManager
         }
 
         // Check if player has enough mana before entering placement mode
-        var player = SlimeTogetherStrong.Game.GameScene.GetPlayer();
+        var player = SlimeTogetherStrong.Game.Scenes.GameScene.GetPlayer();
         if (player == null || player.ManaComponent == null)
         {
             System.Console.WriteLine("Player or mana system not found!");
@@ -92,7 +92,7 @@ public class SkillManager
             return;
 
         // Use mana and start cooldown
-        var player = SlimeTogetherStrong.Game.GameScene.GetPlayer();
+        var player = SlimeTogetherStrong.Game.Scenes.GameScene.GetPlayer();
         if (player != null && player.ManaComponent != null)
         {
             if (player.ManaComponent.UseMana(_skillManaCost))

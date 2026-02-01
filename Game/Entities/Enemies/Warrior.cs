@@ -4,19 +4,19 @@ using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Managers;
 
-namespace SlimeTogetherStrong.Game;
+namespace SlimeTogetherStrong.Game.Entities.Enemies;
 
-public class Tank : Enemy
+public class Warrior : Enemy
 {
     // Enemy stat config
-    protected const float MoveSpeed = 25f;
-    protected const int MaxHP = 60;
-    protected const int Damage = 7;
-    protected const float AttackSpeed = 0.8f;      // attacks per second
-    protected const float AttackRange = 40f;     // pixels
+    protected const float MoveSpeed = 40f;
+    protected const int MaxHP = 40;
+    protected const int Damage = 10;
+    protected const float AttackSpeed = 1f;      // attacks per second
+    protected const float AttackRange = 50f;     // pixels
     protected const float ColliderRadius = 30f;
 
-    public Tank()
+    public Warrior()
     {
         _enemyClass = this;
         _moveSpeed = MoveSpeed;
@@ -25,7 +25,7 @@ public class Tank : Enemy
         _attackSpeed = AttackSpeed;
         _attackRange = AttackRange;
         _colliderRadius = ColliderRadius;
-        _xpReward = 25; // High HP, hard to kill
+        _xpReward = 15; // Balanced enemy
 
         SetupRenderer();
         SetupAnimations();
@@ -39,8 +39,8 @@ public class Tank : Enemy
         // Walk animation
         var walkFrames = new List<Texture2D>
         {
-            ResourceManager.Instance.GetTexture("Tank_walk_1"),
-            ResourceManager.Instance.GetTexture("Tank_walk_2")
+            ResourceManager.Instance.GetTexture("Warrior_walk_1"),
+            ResourceManager.Instance.GetTexture("Warrior_walk_2")
         };
         var walkAnimation = new Animation(walkFrames, 0.2f);
         _animator.AddAnimation("walk", walkAnimation);
@@ -48,11 +48,10 @@ public class Tank : Enemy
         // Attack animation
         var attackFrames = new List<Texture2D>
         {
-            ResourceManager.Instance.GetTexture("Tank_attack_1"),
-            ResourceManager.Instance.GetTexture("Tank_attack_2"),
-            ResourceManager.Instance.GetTexture("Tank_attack_3"),
-            ResourceManager.Instance.GetTexture("Tank_attack_4"),
-            ResourceManager.Instance.GetTexture("Tank_attack_5")
+            ResourceManager.Instance.GetTexture("Warrior_attack_1"),
+            ResourceManager.Instance.GetTexture("Warrior_attack_2"),
+            ResourceManager.Instance.GetTexture("Warrior_attack_3"),
+            ResourceManager.Instance.GetTexture("Warrior_attack_4")
         };
         var attackAnimation = new Animation(attackFrames, 0.2f);
         _animator.AddAnimation("attack", attackAnimation);

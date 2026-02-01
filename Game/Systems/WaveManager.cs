@@ -1,9 +1,12 @@
 using Microsoft.Xna.Framework;
 using SlimeTogetherStrong.Engine.Managers;
+using SlimeTogetherStrong.Game.Entities;
+using SlimeTogetherStrong.Game.Entities.Enemies;
+using SlimeTogetherStrong.Game.Scenes;
 using System;
 using System.Collections.Generic;
 
-namespace SlimeTogetherStrong.Game;
+namespace SlimeTogetherStrong.Game.Systems;
 
 public class WaveManager
 {

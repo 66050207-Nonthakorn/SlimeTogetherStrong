@@ -6,9 +6,9 @@ using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Engine.UI;
 
-namespace SlimeTogetherStrong.Game;
+namespace SlimeTogetherStrong.Game.Scenes;
 
-public class PauseScene : Scene
+public class SettingsScene : Scene
 {
     public override void Load()
     {
@@ -22,15 +22,16 @@ public class PauseScene : Scene
             Position = Vector2.Zero
         };
         var overlayRenderer = overlayBg.AddComponent<SpriteRenderer>();
+        // Create a semi-transparent overlay
         AddGameObject(overlayBg);
 
         // Panel dimensions
-        float panelWidth = 500;
-        float panelHeight = 450;
+        float panelWidth = 600;
+        float panelHeight = 400;
         float panelX = (screenWidth - panelWidth) / 2;
         float panelY = (screenHeight - panelHeight) / 2;
 
-        // Pause panel background
+        // Settings panel background (rounded rectangle)
         var panelBg = new GameObject
         {
             Position = new Vector2(panelX, panelY)
@@ -43,7 +44,7 @@ public class PauseScene : Scene
         panelRenderer.CornerRadius = 20;
         AddGameObject(panelBg);
 
-        // Pause title
+        // Settings title
         var titleObj = new GameObject
         {
             Position = new Vector2(screenWidth / 2, panelY + 60),
@@ -51,58 +52,68 @@ public class PauseScene : Scene
         };
         var title = titleObj.AddComponent<Text>();
         title.Font = ResourceManager.Instance.GetFont("DefaultFont");
-        title.Content = "Paused";
+        title.Content = "Settings";
         title.Color = Color.White;
         // Use unscaled measurement for origin
         var titleSize = title.Font.MeasureString(title.Content);
         title.Origin = titleSize / 2;
         AddGameObject(titleObj);
 
-        // Button dimensions
-        float buttonWidth = 320;
-        float buttonHeight = 70;
-        float buttonSpacing = 20;
+        // Content area starting position
+        float contentX = panelX + 80;
+        float contentStartY = panelY + 150;
+        float rowSpacing = 20;
 
-        // Center alignment
-        float startX = (screenWidth - buttonWidth) / 2;
-        float startY = panelY + 150;
+        // Sound Effects Label
+        var sfxLabelObj = new GameObject
+        {
+            Position = new Vector2(contentX, contentStartY + rowSpacing)
+        };
+        var sfxLabel = sfxLabelObj.AddComponent<Text>();
+        sfxLabel.Font = ResourceManager.Instance.GetFont("DefaultFont");
+        sfxLabel.Content = "SFX Volume:";
+        sfxLabel.Color = Color.White;
+        AddGameObject(sfxLabelObj);
 
-        // Resume Button
-        var resumeButton = new TextButton(
-            "Resume Game",
-            new Vector2(startX, startY),
+        // Sound Effects Slider
+        var sfxSliderObj = new GameObject
+        {
+            Position = new Vector2(contentX + 200, contentStartY + rowSpacing - 10)
+        };
+        var sfxSlider = sfxSliderObj.AddComponent<Slider>();
+        sfxSlider.Size = new Vector2(250, 20);
+        sfxSlider.MinValue = 0f;
+        sfxSlider.MaxValue = 1f;
+        sfxSlider.CurrentValue = AudioManager.Instance.SFXVolume;
+        sfxSlider.BaseColor = new Color(80, 80, 80);
+        sfxSlider.TrackColor = new Color(100, 200, 100);
+        sfxSlider.OnValueChanged = (value) =>
+        {   
+            AudioManager.Instance.SFXVolume = value;
+        };
+        AddGameObject(sfxSliderObj);
+
+        // Back Button
+        float buttonWidth = 200;
+        float buttonHeight = 60;
+        float buttonX = (screenWidth - buttonWidth) / 2;
+        float buttonY = panelY + panelHeight - 100;
+
+        var backButton = new TextButton(
+            "Back",
+            new Vector2(buttonX, buttonY),
             new Vector2(buttonWidth, buttonHeight),
-            OnResumeClick,
+            OnBackClick,
             ResourceManager.Instance.GetFont("DefaultFont")
         );
-        AddGameObject(resumeButton);
-
-        // Settings Button
-        var settingsButton = new TextButton(
-            "Settings",
-            new Vector2(startX, startY + buttonHeight + buttonSpacing),
-            new Vector2(buttonWidth, buttonHeight),
-            OnSettingsClick,
-            ResourceManager.Instance.GetFont("DefaultFont")
-        );
-        AddGameObject(settingsButton);
-
-        // Return to Main Menu Button
-        var mainMenuButton = new TextButton(
-            "Return to Main Menu",
-            new Vector2(startX, startY + (buttonHeight + buttonSpacing) * 2),
-            new Vector2(buttonWidth, buttonHeight),
-            OnMainMenuClick,
-            ResourceManager.Instance.GetFont("DefaultFont")
-        );
-        AddGameObject(mainMenuButton);
+        AddGameObject(backButton);
 
         base.Load();
     }
 
     public override void Update(GameTime gameTime)
     {
-        // Check for ESC key to close pause menu
+        // Check for ESC key to close settings
         if (InputManager.Instance.IsKeyPressed(Keys.Escape))
         {
             SceneManager.Instance.PopOverlay();
@@ -112,24 +123,10 @@ public class PauseScene : Scene
         base.Update(gameTime);
     }
 
-    private void OnResumeClick()
+    private void OnBackClick()
     {
-        // Close the pause overlay
         AudioManager.Instance.PlaySound("Button_Click");
+        // Close the settings overlay
         SceneManager.Instance.PopOverlay();
-    }
-
-    private void OnSettingsClick()
-    {
-        // Open settings as another overlay on top of pause menu
-        AudioManager.Instance.PlaySound("Button_Click");
-        SceneManager.Instance.PushOverlay(new SettingsScene());
-    }
-
-    private void OnMainMenuClick()
-    {
-        // Return to main menu (this will clear all overlays)
-        AudioManager.Instance.PlaySound("Button_Click");
-        SceneManager.Instance.LoadScene("MainMenu");
     }
 }

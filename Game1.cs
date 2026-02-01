@@ -3,7 +3,8 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Engine.UI;
-using SlimeTogetherStrong.Game;
+using SlimeTogetherStrong.Game.Constants;
+using SlimeTogetherStrong.Game.Scenes;
 
 namespace SlimeTogetherStrong;
 

@@ -1,7 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
+using SlimeTogetherStrong.Game.Constants;
 
-namespace SlimeTogetherStrong.Game;
+namespace SlimeTogetherStrong.Game.Systems;
 
 public class MapManager
 {

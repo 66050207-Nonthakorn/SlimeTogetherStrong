@@ -6,7 +6,11 @@ using SlimeTogetherStrong.Engine.Components;
 using SlimeTogetherStrong.Engine.Components.Physics;
 using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Engine.UI;
-using SlimeTogetherStrong.Game;
+using SlimeTogetherStrong.Game.Constants;
+using SlimeTogetherStrong.Game.Scenes;
+using SlimeTogetherStrong.Game.Systems;
+
+namespace SlimeTogetherStrong.Game.Entities;
 
 public class Ally : GameObject
 {
