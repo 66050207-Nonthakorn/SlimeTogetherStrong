@@ -39,9 +39,16 @@ public class LevelUpOverlayScene : Scene
         _newLevel = newLevel;
     }
 
+    public LevelUpOverlayScene()
+    {
+    }
+
     public override void Load()
     {
         base.Load();
+
+        // Play level up sound
+        AudioManager.Instance.PlaySound("Level_Up");
 
         int screenWidth = SceneManager.Instance.ScreenWidth;
         int screenHeight = SceneManager.Instance.ScreenHeight;
@@ -209,6 +216,7 @@ public class LevelUpOverlayScene : Scene
     {
         if (_isInCountdown) return;
         _onUpgradeSelected?.Invoke(cardIndex);
+        AudioManager.Instance.PlaySound("Upgrade_Select");
         SceneManager.Instance.PopOverlay();
     }
 }

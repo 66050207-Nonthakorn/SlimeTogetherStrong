@@ -27,7 +27,7 @@ public class SettingsScene : Scene
 
         // Panel dimensions
         float panelWidth = 600;
-        float panelHeight = 500;
+        float panelHeight = 400;
         float panelX = (screenWidth - panelWidth) / 2;
         float panelY = (screenHeight - panelHeight) / 2;
 
@@ -62,36 +62,7 @@ public class SettingsScene : Scene
         // Content area starting position
         float contentX = panelX + 80;
         float contentStartY = panelY + 150;
-        float rowSpacing = 100;
-
-        // BGM Label
-        var bgmLabelObj = new GameObject
-        {
-            Position = new Vector2(contentX, contentStartY)
-        };
-        var bgmLabel = bgmLabelObj.AddComponent<Text>();
-        bgmLabel.Font = ResourceManager.Instance.GetFont("DefaultFont");
-        bgmLabel.Content = "BGM Volume:";
-        bgmLabel.Color = Color.White;
-        AddGameObject(bgmLabelObj);
-
-        // BGM Slider
-        var bgmSliderObj = new GameObject
-        {
-            Position = new Vector2(contentX + 200, contentStartY - 10)
-        };
-        var bgmSlider = bgmSliderObj.AddComponent<Slider>();
-        bgmSlider.Size = new Vector2(250, 20);
-        bgmSlider.MinValue = 0f;
-        bgmSlider.MaxValue = 1f;
-        bgmSlider.CurrentValue = AudioManager.Instance.BGMVolume;
-        bgmSlider.BaseColor = new Color(80, 80, 80);
-        bgmSlider.TrackColor = new Color(100, 200, 100);
-        bgmSlider.OnValueChanged = (value) =>
-        {
-            AudioManager.Instance.BGMVolume = value;
-        };
-        AddGameObject(bgmSliderObj);
+        float rowSpacing = 20;
 
         // Sound Effects Label
         var sfxLabelObj = new GameObject
@@ -117,7 +88,7 @@ public class SettingsScene : Scene
         sfxSlider.BaseColor = new Color(80, 80, 80);
         sfxSlider.TrackColor = new Color(100, 200, 100);
         sfxSlider.OnValueChanged = (value) =>
-        {
+        {   
             AudioManager.Instance.SFXVolume = value;
         };
         AddGameObject(sfxSliderObj);
@@ -154,6 +125,7 @@ public class SettingsScene : Scene
 
     private void OnBackClick()
     {
+        AudioManager.Instance.PlaySound("Button_Click");
         // Close the settings overlay
         SceneManager.Instance.PopOverlay();
     }

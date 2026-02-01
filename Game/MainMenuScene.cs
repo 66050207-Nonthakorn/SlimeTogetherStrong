@@ -85,12 +85,14 @@ public class MainMenuScene : Scene
     private void OnSettingsClick()
     {
         // Open settings as an overlay
+        AudioManager.Instance.PlaySound("Button_Click");
         SceneManager.Instance.PushOverlay(new SettingsScene());
     }
 
     private void OnQuitGameClick()
     {
         // Exit the game
+        AudioManager.Instance.PlaySound("Button_Click");
         System.Environment.Exit(0);
     }
 }

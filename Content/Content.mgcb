@@ -121,6 +121,12 @@
 /processorParam:TextureFormat=Color
 /build:Ally_idle/Slime_Friend_Idle-4.png
 
+#begin AllyPlace.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:AllyPlace.wav
+
 #begin Castle_idle/Base-1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -632,6 +638,12 @@
 /processorParam:TextureFormat=Compressed
 /build:font.spritefont
 
+#begin Hit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Hit.wav;Hit_Enemy.wav
+
 #begin Main/Background.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -715,6 +727,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Player_attack/P_attack_4.PNG
+
+#begin Player_attack/shoot2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Player_attack/shoot2.wav;Player_attack/P_attack.wav
 
 #begin Player_idle/P_idle_0.PNG
 /importer:TextureImporter
@@ -836,6 +854,18 @@
 /processorParam:TextureFormat=Color
 /build:UI/Health.png
 
+#begin UI/LevelUp.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:UI/LevelUp.wav;UI/UpgradeSelect.wav
+
+#begin UI/LevelUpSelect.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:UI/LevelUpSelect.wav;UI/LevelUp.wav
+
 #begin UI/Main_Menu.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -859,6 +889,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI/Mana_point_.png
+
+#begin UI/select.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:UI/select.wav;UI/Click.wav
 
 #begin UI/Shield.png
 /importer:TextureImporter

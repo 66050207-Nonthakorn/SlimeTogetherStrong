@@ -212,6 +212,7 @@ public class Player : GameObject
     {
         _shootTimer = ShootCooldown;
 
+        AudioManager.Instance.PlaySound("Player_Attack");
         StartAttack();
 
         // Spawn projectile
@@ -238,7 +239,7 @@ public class Player : GameObject
         float y = GameConstants.CENTER.Y + (float)Math.Sin(CurrentAngle) * GameConstants.ORANGE_RADIUS;
         Position = new Vector2(x, y);
 
-        Rotation = CurrentAngle - MathHelper.PiOver2;
+        // Rotation = CurrentAngle - MathHelper.PiOver2;
     }
 
     private void StartAttack()

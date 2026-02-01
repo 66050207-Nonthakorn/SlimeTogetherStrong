@@ -115,18 +115,21 @@ public class PauseScene : Scene
     private void OnResumeClick()
     {
         // Close the pause overlay
+        AudioManager.Instance.PlaySound("Button_Click");
         SceneManager.Instance.PopOverlay();
     }
 
     private void OnSettingsClick()
     {
         // Open settings as another overlay on top of pause menu
+        AudioManager.Instance.PlaySound("Button_Click");
         SceneManager.Instance.PushOverlay(new SettingsScene());
     }
 
     private void OnMainMenuClick()
     {
         // Return to main menu (this will clear all overlays)
+        AudioManager.Instance.PlaySound("Button_Click");
         SceneManager.Instance.LoadScene("MainMenu");
     }
 }

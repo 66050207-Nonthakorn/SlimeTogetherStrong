@@ -138,8 +138,10 @@ public class GameScene : Scene
     {
         if (_gameOver)
             return;
-                    if (InputManager.Instance.IsKeyPressed(Keys.Escape))
+        
+        if (InputManager.Instance.IsKeyPressed(Keys.Escape))
         {
+            AudioManager.Instance.PlaySound("Button_Click");
             SceneManager.Instance.PushOverlay(new PauseScene());
             return;
         }
@@ -229,6 +231,7 @@ public class GameScene : Scene
             if (lane != null && lane.CanAddAlly())
             {
                 CreateAlly(lane);
+                AudioManager.Instance.PlaySound("Ally_Place");
                 SkillManager.Instance.OnAllyPlacedSuccessfully();
             }
         }
@@ -262,6 +265,8 @@ public class GameScene : Scene
 
                     var explosion = new Explosion(projectile.Position);
                     _objectsToAdd.Add(explosion);
+
+                    AudioManager.Instance.PlaySound("Hit_Enemy");
 
                     projectile.Active = false;
                     break;

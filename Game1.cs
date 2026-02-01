@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using SlimeTogetherStrong.Engine.Managers;
 using SlimeTogetherStrong.Engine.UI;
@@ -138,6 +139,18 @@ public class Game1 : Microsoft.Xna.Framework.Game
         ResourceManager.Instance.LoadTexture("Tank_attack_4", Content.Load<Texture2D>("Enemies/Tank_attack/Tank_attack_4"));
         ResourceManager.Instance.LoadTexture("Tank_attack_5", Content.Load<Texture2D>("Enemies/Tank_attack/Tank_attack_5"));
 
+        // Audio - Player
+        AudioManager.Instance.LoadSound("Player_Attack", Content.Load<SoundEffect>("Player_attack/P_attack"));
+        AudioManager.Instance.LoadSound("Hit_Enemy", Content.Load<SoundEffect>("Hit_Enemy"));
+
+        // Audio - Ally
+        AudioManager.Instance.LoadSound("Ally_Place", Content.Load<SoundEffect>("AllyPlace"));
+
+        // Audio - UI
+        AudioManager.Instance.LoadSound("Button_Click", Content.Load<SoundEffect>("UI/Click"));
+        AudioManager.Instance.LoadSound("Level_Up", Content.Load<SoundEffect>("UI/LevelUp"));
+        AudioManager.Instance.LoadSound("Upgrade_Select", Content.Load<SoundEffect>("UI/UpgradeSelect"));
+
         // สร้าง Scene หลังจากโหลด texture แล้ว
         SceneManager.Instance.AddScene("MainMenu", new MainMenuScene());
 
@@ -165,7 +178,7 @@ public class Game1 : Microsoft.Xna.Framework.Game
 
         // วาด lane roads (6 เส้นถนน ทุกๆ 60°)
         var currentScene = SceneManager.Instance.GetCurrentScene();
-        if (currentScene is SlimeTogetherStrong.Game.GameScene gameScene)
+        if (currentScene is GameScene gameScene)
         {
             DrawLaneRoads(_spriteBatch);
             gameScene.DrawPlacementHighlights(_spriteBatch, GraphicsDevice);
